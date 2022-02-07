@@ -1,4 +1,4 @@
-# [Project Title Here]
+# Recipeezy
 
 ## Team Members
 
@@ -9,7 +9,7 @@
 
 ## Vision
 
-[Project Title Here] is a website which will collect and organize recipes from around the world. This will give people the opportunity to share their own personal or family recipes, while also exploring different foods and finding new ideas for their culinary adventure. 
+Recipeezy is a website which will collect and organize recipes from around the world. This will give people the opportunity to share their own personal or family recipes, while also exploring different foods and finding new ideas for their culinary adventure. 
 
 **Use Cases**:
   
