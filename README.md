@@ -15,13 +15,13 @@
   
 <ins>Main Use Cases</ins>:
 * **Recipe Lookup** - The user will be able to look up recipes based on a wide range of input criteria.
-* **Recipe Submission** - The user will be able to submit their own recipe in an easy 
+* **Recipe Submission** - The user will be able to submit their own recipe utilizing a simple user interface 
 * **Voting System** - The user will be allowed to vote on other people's recipes, which affect an accumilated "score" for the recipe and will affect the order that the recipe appears when doing a recipe lookup.
   
 <ins>Expanded/Potential Use Cases</ins>:
-* **Pantry List** - Will give you a recipe to use based on ingredients you list
-* **Recommendation System** - Based on what you vote for, will recommend new recipes to use
-* **Recipe of the Day** - Every day will send you a new recipe to try based on set preferences
+* **Pantry List** - Will recommend recipes to use based on ingredients you list
+* **Recommendation System** - Recipes will be recommended to the user based on what they vote for
+* **Recipe of the Day** - Every day users will be sent a new recipe to try based on set preferences
 * **Calorie Tracker** - Track your calories/macros and suggest recipes that will help you meet your goals
 
 ## Motivation
