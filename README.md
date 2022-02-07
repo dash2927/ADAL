@@ -25,8 +25,7 @@ Recipeezy is a website which will collect and organize recipes from around the w
 * **Calorie Tracker** - Track your calories/macros and suggest recipes that will help you meet your goals
 
 ## Motivation
-
-The motivation behind this project is that we wanted to make a system where our friends and family could share recipes with each other. We thought that it would be engaging and useful to include a rating system for each recipe ina similar manner to the popular social website, Reddit.com. 
+At some point we've all experienced searching for that perfect recipe. Even if you do find 'the one', it usually comes after a wall of text wherein the author explains how this recipie was their great-grandmother's-aunt's-brother's favorite meal after a hard day on the farm. Our team wishes to simplify the recipe discovery process by delivering an experience built around the aspiring home chef. The motivation behind this project is our desire to make a system where our friends and family can share recipes with each other. We think that it will be engaging and useful to include a rating system for each recipe in a similar manner to the popular social website, Reddit.com. 
 
 ## Risks
 
