@@ -1,3 +1,4 @@
+import hashlib
 '''
 TODO:
     * finish recipe class
@@ -11,24 +12,46 @@ TODO:
 '''
 
 
-class recipe():
+class entryRecipe:
     def __init__(self, name):
         self.name = name
+        self.ing = dict()
+        self.cuisine = ""
+        self.desc = ""
         self.__uID = -1
         self.__recipe = ""
-        self.__cuisine = ""
         self.__rating = 0
         self.__tag = []
         self.__servings = 1
-        self.__ingredients = set()
 
     def set_recipe(self, recipe):  # Use setter so we can create UID
         self.__recipe = recipe
         if self.__uID == -1:  # UID is not set, this is a new entry
-            self.__uID = hash(self.name + recipe)
+            self.__uID = int(hashlib.sha256((self.name +
+                                             recipe).encode('utf-8')).hexdigest()[:10],
+                             16)
 
-    def get_recipe(self, servings=self.__servings):
-        pass
+    def get_recipe(self, servings=1):
+        return self.__recipe
+
+    def set_ingredients(self, ings):
+        for ing in ings:
+            sing = ing.split(" ")
+            amt = (sing[0], sing[1])
+            self.ing[" ".join(sing[2:])] = amt
+
+    def get_ingredients(self):
+        ingstr = []
+        for ing in self.ing:
+            ingstr.append(self.ing[ing][0] + " " + self.ing[ing][1] +
+                          " " + ing)
+        return "\n".join(ingstr)
+
+    def set_desc(self, desc):
+        self.desc = desc
+
+    def get_desc(self):
+        return self.desc
 
     def set_rating(self, rating):
         assert rating >= 0, "Rank needs to be >= 0"
@@ -57,14 +80,13 @@ class recipe():
         assert len(tag) <= 10, "Tags are meant to be short, <10 characters"
         self.__tag.append(tag)
 
-    def get_tag(self):
+    def set_tags(self, tag):
+        self.__tag = tag
+
+    def get_tags(self):
         return self.__tag
 
     def get_uID(self):
         return self.__uID
-
-
-if __name__ == "__main__":
-    pass
 
 
