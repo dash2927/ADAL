@@ -28,7 +28,8 @@ class entryRecipe:
         self.__recipe = recipe
         if self.__uID == -1:  # UID is not set, this is a new entry
             self.__uID = int(hashlib.sha256((self.name +
-                                             recipe).encode('utf-8')).hexdigest()[:10],
+                                             recipe).encode(
+                                                 'utf-8')).hexdigest()[:10],
                              16)
 
     def get_recipe(self, servings=1):
@@ -89,4 +90,18 @@ class entryRecipe:
     def get_uID(self):
         return self.__uID
 
+    def print(self):
+        print("--NAME--")
+        print(self.name)
+        print("\n--DESCRIPTION--")
+        print(self.desc)
+        if len(self.get_tags()) > 0:
+            print("\n--TAGS--")
+            print(", ".join(self.get_tags()))
+        print("\n--INGREDIENTS--")
+        print(", ".join(self.ing.keys()))
+        print("\n--DIRECTIONS--")
+        print(self.get_ingredients())
+        print("\n")
+        print(self.get_recipe())
 

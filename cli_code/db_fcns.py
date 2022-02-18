@@ -30,7 +30,9 @@ def parse_info(file):
     cuisine = re.findall(r"(?<=CUISINE:\n)(.*)(?=\nDESCRIPTION)", rectxt)
     desc = re.findall(r"(?<=DESCRIPTION:\n)([\S\s]*)(?=\nTAGS)", rectxt)
     tags = re.findall(r"(?<=TAGS:\n)([\S\s]*)(?=\nINGREDIENTS)",
-                      rectxt)[0].split(", ")
+                      rectxt)
+    if len(tags) > 0:
+        tags = tags[0].split(", ")
     ing = re.findall(r"(?<=INGREDIENTS:\n)([\S\s]*)(?=\nRECIPE)",
                      rectxt)[0].split("\n")
     recp = re.findall(r"(?<=RECIPE:\n)([\S\s]*)", rectxt)
@@ -61,7 +63,7 @@ def get_entry(entry):
             if str(e).startswith(str(entry)):
                 lst.append(e)
         if len(lst) == 1:
-            print_entry(data[lst[0]])
+            data[lst[0]].print()
             return
         if len(lst) > 1:
             print("Multiple entries found:")
@@ -71,7 +73,7 @@ def get_entry(entry):
             print("No entry found with that key")
             sys.exit()
     else:
-        print_entry(data[entry])
+        data[entry].print()
 
 
 def print_entry(rec):
@@ -88,6 +90,75 @@ def add_entry(file):
     else:
         data[new_recipe.get_uID()] = new_recipe
     save_db(data)
+
+
+def addtag(entry, tag):
+    data = load_db()
+    entry = int(entry)
+    if entry not in data:
+        lst = []
+        for e in data:
+            if str(e).startswith(str(entry)):
+                lst.append(e)
+        if len(lst) == 1:
+            data[lst[0]].add_tag(tag)
+            save_db(data)
+            return
+        if len(lst) > 1:
+            print("Multiple entries found:")
+            for i in lst:
+                print_entry(data[i])
+        else:
+            print("No entry found with that key")
+    else:
+        data[entry].add_tag(tag)
+        save_db(data)
+
+
+def upvote(entry):
+    data = load_db()
+    entry = int(entry)
+    if entry not in data:
+        lst = []
+        for e in data:
+            if str(e).startswith(str(entry)):
+                lst.append(e)
+        if len(lst) == 1:
+            data[lst[0]].inc_rating()
+            save_db(data)
+            return
+        if len(lst) > 1:
+            print("Multiple entries found:")
+            for i in lst:
+                print_entry(data[i])
+        else:
+            print("No entry found with that key")
+    else:
+        data[entry].inc_rating()
+        save_db(data)
+
+
+def downvote(entry):
+    data = load_db()
+    entry = int(entry)
+    if entry not in data:
+        lst = []
+        for e in data:
+            if str(e).startswith(str(entry)):
+                lst.append(e)
+        if len(lst) == 1:
+            data[lst[0]].dec_rating()
+            save_db(data)
+            return
+        if len(lst) > 1:
+            print("Multiple entries found:")
+            for i in lst:
+                print_entry(data[i])
+        else:
+            print("No entry found with that key")
+    else:
+        data[entry].dec_rating()
+        save_db(data)
 
 
 def rm_entry(entry):
@@ -124,6 +195,9 @@ def help():
            "specifically formated text file",
            '--get-all': "Get all recipe entries",
            '--get-entry': "Get a specific entry based on the Uid",
-           '--remove-entry': "Remove an entry based on the Uid"}
+           '--remove-entry': "Remove an entry based on the Uid",
+           '--downvote': "Downvote a recipe based on Uid",
+           '--upvote': "Upvote a recipe based on Uid",
+           '--add-tag': "Add a 10 character tag to recipe based on Uid"}
     for h in hlp:
         print(f'{h} | {hlp[h]}')
