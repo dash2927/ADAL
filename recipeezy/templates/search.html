@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+{% extends 'home.html' %}
+
+{% block content %}
+<h1>
+Woops, only one recipe available. Looks pretty good though!
+</h1>
+<img src={{url_for('static', filename='Key_Lime_Cake.png')}} width=50% height=50%>
+<div>
+{{text}}
+</div>
+<style>
+div {white-space: pre-wrap;}
+</style>
+{% endblock %}
