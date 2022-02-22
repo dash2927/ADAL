@@ -14,15 +14,15 @@ Recipeezy is a website which will collect and organize recipes from around the w
 **Use Cases**:
   
 <ins>Main Use Cases</ins>:
-* **Recipe Lookup** - The user will be able to look up recipes based on a wide range of input criteria.
-* **Recipe Submission** - The user will be able to submit their own recipe utilizing a simple user interface 
-* **Voting System** - The user will be allowed to vote on other people's recipes, which affect an accumilated "score" for the recipe and will affect the order that the recipe appears when doing a recipe lookup.
+:mag: **Recipe Lookup** - The user will be able to look up recipes based on a wide range of input criteria.
+:inbox_tray: **Recipe Submission** - The user will be able to submit their own recipe utilizing a simple user interface 
+:+1: **Voting System** - The user will be allowed to vote on other people's recipes, which affect an accumilated "score" for the recipe and will affect the order that the recipe appears when doing a recipe lookup.
   
 <ins>Expanded/Potential Use Cases</ins>:
-* **Pantry List** - Will recommend recipes to use based on ingredients you list
-* **Recommendation System** - Recipes will be recommended to the user based on what they vote for
-* **Recipe of the Day** - Every day users will be sent a new recipe to try based on set preferences
-* **Calorie Tracker** - Track your calories/macros and suggest recipes that will help you meet your goals
+:bread: **Pantry List** - Will recommend recipes to use based on ingredients you list
+:heavy_check_mark: **Recommendation System** - Recipes will be recommended to the user based on what they vote for
+:calendar: **Recipe of the Day** - Every day users will be sent a new recipe to try based on set preferences
+:runner: **Calorie Tracker** - Track your calories/macros and suggest recipes that will help you meet your goals
 
 ## Motivation
 At some point we've all experienced searching for that perfect recipe. Even if you do find 'the one', it usually comes after a wall of text wherein the author explains how this recipie was their great-grandmother's-aunt's-brother's favorite meal after a hard day on the farm. Our team wishes to simplify the recipe discovery process by delivering an experience built around the aspiring home chef. The motivation behind this project is our desire to make a system where our friends and family can share recipes with each other. We think that it will be engaging and useful to include a rating system for each recipe in a similar manner to the popular social website, Reddit.com. 
