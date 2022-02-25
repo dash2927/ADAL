@@ -177,3 +177,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Ignoring the generated instance for Flask
+/instance/
+/instance/recipeezy.sqlite3
