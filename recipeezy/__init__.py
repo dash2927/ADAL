@@ -35,6 +35,5 @@ def create_app(test_config=None):
 
     from . import home
     app.register_blueprint(home.bp)
-    app.add_url_rule('/home', endpoint='index')
 
     return app
