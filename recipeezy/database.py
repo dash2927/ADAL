@@ -1,18 +1,22 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import bcrypt
 import re
 
 db = SQLAlchemy()
 
 
 class User(db.Model):
+    '''
+    database table for user
+    '''
     __tablename__ = "userinfo"
     id = db.Column(db.Integer, primary_key=True)
     _username = db.Column(db.Integer, nullable=False)
     _pwdhash = db.Column(db.String(64), nullable=False)
     _email = db.Column(db.String(64), unique=True)
+    posts = db.Column(db.Integer, default=0)
+    upvotes = db.Column(db.Integer, default=0)
     created = db.Column(db.DateTime, nullable=False,
                         server_default=db.func.current_timestamp())
 
@@ -48,6 +52,9 @@ class User(db.Model):
 
 
 class Post(db.Model):
+    '''
+    database table for recipe posts
+    '''
     __tablename__ = "post"
     postid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     author_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'),
@@ -55,7 +62,7 @@ class Post(db.Model):
     # One-to-one relationship with userinfo.id
     author = db.relationship("User", backref=db.backref("userinfo",
                                                         uselist=False))
-
+    upvotes = db.Column(db.Integer)
     created = db.Column(db.DateTime, nullable=False,
                         server_default=db.func.current_timestamp())
     title = db.Column(db.Text, nullable=False)
