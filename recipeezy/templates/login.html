@@ -4,7 +4,12 @@
 
 {% block content %}
 <form method="POST" action="/login">
-    <div>{{ form.username.label }}: {{ form.username(class="css_class") }}</div>
+    {{ form.csrf_token }}
+    {% if form.csrf_token.errors %}
+        <div class="warning">You have submitted an invalid CSRF token</div>
+    {% endif %}
+    <div>{{ form.username.label }}: {{ form.username() }}</div>
     <div>{{ form.password.label }}: {{ form.password() }}</div>
+    <div>{{form.submit()}}</div>
 </form>
 {% endblock %}
