@@ -41,19 +41,15 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    # @app.route('/hello')
-    # def hello():
-    #     return 'Hello, World!'
-
     # Init database app from sqlalchemy
     db.init_app(app)
     # Init login manager
     login_manager.init_app(app)
 
-    # if we are not using sqlalchemy:
-    # app.teardown_appcontext(close_db)
-    # app.cli.add_command(init_db_command)
+    # function to create all tables before request
+    @app.before_first_request
+    def create_tables():
+        db.create_all()
 
     with app.app_context():
         from . import home
@@ -62,9 +58,19 @@ def create_app(test_config=None):
         app.register_blueprint(login.loginbp)
 
         # Create Database Models
-        db.create_all()
+        # db.create_all()
+        create_tables()
 
-
-
+    # Create a test user
+    from .database import User
+    new_user = User('new_user', 'password')
+    with app.app_context():
+        db.session.commit()
+        db.session.add(new_user)
+    try:
+        new_user.email = 'bademail'
+    except ValueError:
+        print("test", flush=True)
+        new_user.email = 'good@email.com'
 
     return app

@@ -15,7 +15,6 @@ def menu_selection(req):
     #     username = escape(session['username'])
     # else:
     #     username = None
-    print("Test", flush=True)
     if req.form.get('menu', None):
         return redirect(url_for('home_bp.home'))
     elif req.form.get('login', None):
@@ -32,10 +31,8 @@ def menu_selection(req):
 @homebp.route('/', methods=('GET', 'POST'))
 @homebp.route('/home', methods=('GET', 'POST'))
 def home():
-    print("test1", flush=True)
+    print("Switched to home", flush=True)
     if request.method == 'POST':
-        print("test", flush=True)
-        print(request.form, flush=True)
         return menu_selection(request)
     return render_template('home.html')
 
