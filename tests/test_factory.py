@@ -8,4 +8,4 @@ def test_config():
 
 def test_client(client):
     response = client.get('/')
-    print(type(response))
+    
