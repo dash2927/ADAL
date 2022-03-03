@@ -1,71 +1,155 @@
 <!DOCTYPE html>
-<html>
-<head>
-<style>
-body {background-color: white;}
-h1.title {display: inline-block;
-			 width: calc(100% - 100px);;
-	  		 background-color: white;
-  	  		 float: top;
-      	 font-size: 60px;}
-form.pic_button {vertical-align: middle;
-                 display: inline;}
-.text_button    {vertical-align: middle;
-                 display: inline;}
-input.menu {vertical-align: middle;}
-.create{color: red;
-		  vertical-align: middle;
-        border: none;
-        background-color: inherit;
-        padding: 10px 14px;
-        font-size: 16px;
-        cursor: pointer;
-        display: inline-block;}
-.search{color: red;
-		  vertical-align: middle;
-        border: none;
-        background-color: inherit;
-        padding: 10px 14px;
-        font-size: 16px;
-        cursor: pointer;
-        display: inline-block;}
-.loginout {color: red;
-		     align: right;
-		     vertical-align: middle;
-           border: none;
-           background-color: inherit;
-           padding: 10px 14px;
-           font-size: 16px;
-           cursor: pointer;
-           display: inline-block;}
-p      {color: black;}
-.body  {display: inline-block;
-        width: calc(100% - 100px)}
-.title {display:inline;
-		   color: black;
-        vertical-align: middle;}
-</style>
-</head>
 
-<body>
-   <h1 class="title">
-   <form method="POST" class="pic_button">
-      <input type="hidden" name="menu" value="MENU">
-      <input type="image" class="menu" width="146" height="47" src="{{url_for('static', filename='title_button.png')}}">
-   </form>
-   <form method="POST" class="text_button">
-      <input type="submit" class="create" value="CREATE" name="create" id="create">
-      <input type="submit" class="search" value="SEARCH" name="search" id="search">
-      {% if not name %}
-         <input type="submit" class="loginout" value="LOGIN" name="login" id="login">
-      {% else %}
-         <input type="submit" class="loginout" value=LOGOUT&nbsp;({{name}}) name="logout" id="logout">
-      {% endif %}
-   </form>
-   </h1>
-   <div class="content">
-   {% block content %} {% endblock %}
+{% extends 'base.html' %}
+
+{% block content %}
+<main>
+
+
+   <div class="album py-5 bg-light">
+     <div class="container">
+ 
+       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test1.jpeg') }}" alt="">
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test2.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test3.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+ 
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test4.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test5.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test6.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+ 
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test7.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test8.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col">
+           <div class="card shadow-sm">
+            <img height="225" src="{{ url_for('static', filename='images/test9.jpeg') }}" alt=""> 
+             <div class="card-body">
+               <p class="card-text">Here is some sample text to describe the recipe</p>
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-sm btn-outline-danger">View</button>
+                   <button type="button" class="btn btn-sm btn-outline-danger">Edit</button>
+                 </div>
+                 <small class="text-muted">9 likes</small>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
    </div>
-   <p class="body"><h1>{{body}}</h1></p>
-</body>
-</html>
+ 
+ </main>
+    {% endblock %}
