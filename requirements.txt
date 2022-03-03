@@ -2,3 +2,4 @@ Flask
 Flask-SQLAlchemy
 flask-login
 Flask-WTF=2.2.0
+bcrypt

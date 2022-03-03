@@ -5,7 +5,7 @@ from .database import User
 import os
 
 from . import login_manager
-from database import db
+# from database import db
 
 # Create out blueprint
 loginbp = Blueprint('login_bp',
@@ -34,7 +34,7 @@ def login():
 @loginbp.route('/signup', methods=('GET', 'POST'))
 def signup():
     if request.method == 'POST':
-        pass 
+        pass
     return render_template('signup.html')
 
 
