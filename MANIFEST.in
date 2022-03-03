@@ -1,0 +1,5 @@
+include LICENSE.rst
+graft recipeezy/static
+graft recipeezy/templates
+graft tests
+global-exclude *.pyc
