@@ -34,7 +34,7 @@ def login():
 @loginbp.route('/signup', methods=('GET', 'POST'))
 def signup():
     if request.method == 'POST':
-        continue
+        pass 
     return render_template('signup.html')
 
 
