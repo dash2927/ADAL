@@ -12,4 +12,9 @@
     <div>{{ form.password.label }}: {{ form.password() }}</div>
     <div>{{form.submit()}}</div>
 </form>
+<body>
+    {% for mesg in get_flashed_messages() %}
+    <h1>{{ mesg }}</h1>
+    {% endfor %}
+</body>
 {% endblock %}

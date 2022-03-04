@@ -1,6 +1,8 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
+from flask_login import current_user
+
 from werkzeug.exceptions import abort
 
 
@@ -19,8 +21,8 @@ def menu_selection(req):
         return redirect(url_for('home_bp.home'))
     elif req.form.get('login', None):
         return redirect(url_for('login_bp.login'))
-    # elif req.form.get('logout', None):
-    #     return redirect(url_for('logout'))
+    elif req.form.get('logout', None):
+        return redirect(url_for('logout'))
     # elif req.form.get('create', None):
     #     return redirect(url_for('create', username=username))
     # elif req.form.get('search', None):

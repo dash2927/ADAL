@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, flash, redirect, session, render_template, request, url_for
 from flask import current_app as ca
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import login_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user, login_required
 from urllib.parse import urlparse, urljoin
 from .database import User
 from .forms import LoginForm, MakeAcctForm
@@ -18,6 +18,10 @@ loginbp = Blueprint('login_bp',
 
 
 def is_safe_url(target):
+    '''
+    taken from recommended method to check for safe url
+    in flask_login API doumentation
+    '''
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
@@ -26,10 +30,7 @@ def is_safe_url(target):
 
 @login_manager.user_loader
 def load_user(id):
-    rt = User.query.get(int(id))
-    print("test load_user", flush=True)
-    print(rt, flush=True)
-    return rt
+    return User.query.get(id)
 
 
 @loginbp.route('/login', methods=('GET', 'POST'))
@@ -44,17 +45,22 @@ def login():
         print(f'***{username} filter_by result: {user}', flush=True)
         # print(f'Verification: {password} = {user.verify_pwd(password)}')
         print(User.query.all())
-        if user is not None and user.verify_pwd(password):
-            login_user(user)
-            flash('Logged in succesfully')
-            # next gets the page you were previously on for redirect
-            nxt = request.args.get('next')
-            # is_safe_url should check if the url is safe for redirects.
-            if not is_safe_url(nxt):
-                return abort(400)
-            return redirect(nxt or url_for('home_bp.home'))
+        if user is not None:
+            if user.verify_pwd(password):
+                login_user(user)
+                flash('Logged in succesfully')
+                # next gets the page you were previously on for redirect
+                nxt = request.args.get('next')
+                # is_safe_url should check if the url is safe for redirects.
+                if not is_safe_url(nxt):
+                    return abort(400)
+                return redirect(nxt or url_for('home_bp.home'))
+            else:
+                print("Incorrect password check", flush=True)
+                flash("Incorrect password")
         else:
             # this is temporary. it essentially just adds a constant new user
+            # replace this section with account creation redirect!
             new_user = User('new_user', 'password')
             db.session.commit()
             db.session.add(new_user)
@@ -79,4 +85,8 @@ def signup():
 @loginbp.route('/signout')
 @login_required
 def signout():
-    pass
+    logout_user()
+    nxt = request.args.get('next')
+    if not is_safe_url(nxt):
+        return abort(400)
+    return redirect(nxt or url_for('home_bp.home'))

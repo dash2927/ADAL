@@ -1,6 +1,6 @@
-Flask
-Flask-SQLAlchemy
-flask-login
+Flask=2.0.3
+Flask-SQLAlchemy=2.5.1
+flask-login=0.5.0
 Flask-WTF=2.2.0
-bcrypt
-pytest
+pytest=7.0.1
+Flask-Testing=0.8.1
