@@ -67,8 +67,8 @@ def create_app(test_config=None):
     from .database import User
     new_user = User('new_user', 'password')
     with app.app_context():
-        db.session.commit()
         db.session.add(new_user)
+        db.session.commit()
     try:
         new_user.email = 'bademail'
     except ValueError:
