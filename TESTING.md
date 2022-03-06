@@ -11,6 +11,9 @@ Recipeezy
 
 # Automated Test Cases:
 
+PRECONDITION TO RUN ALL TESTS:
+1. create a new environment
+2. run `pip install -r requirements.txt` in environment to get requirements
 ---
 Use case name
     Verify login with valid user name and password
