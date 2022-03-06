@@ -46,7 +46,8 @@ class User(UserMixin, db.Model):
 
     @email.setter
     def email(self, email):
-        if(re.fullmatch(r'^[A-Za-z0-9\._-]+@[A-Za-z0-9]+\.[A-Za-z]{2,}$', email)):
+        if(re.fullmatch(r'^[A-Za-z0-9\._-]+@[A-Za-z0-9]+\.[A-Za-z]{2,}$',
+                        email)):
             self._email = email
         else:
             raise ValueError("invalid email address")

@@ -16,24 +16,27 @@ Use case name
     Verify login with valid user name and password
 Description
     Test for logging in only. This tests for access to the User database and
-    return to the previous page.
+    return to the HOME page.
 Pre-conditions
     No preconditions
 Test steps
-    1. Navigate to Login page
-    2. In Username, type "New_User"
-    3. In Password, type "Password"
-    4. Click login button
+    1. run app using `python recipeezy.py`
+    2. open browser and delete cookies
+    3. go to the url given by app
+    4. click on CREATE
+    5. In Username, type "New_User"
+    6. In Password, type "Password"
+    7. Click submit button
 Expected result
-    User should login and be returned to homepage
+    User should login and be returned to HOME page
 Actual result
-    User is logged in and returned to homepage
+    User is logged in and returned to HOME page
 Status (Pass/Fail)
     Pass
 Notes
-    * There is no notification of user being logged in. It will show up on flask CLI.
+    * User is not given notification of user being logged in. It will show up on flask CLI and as a flash() message for debugging.
+    * Cookies will save your credentials so if you click on CREATE and aren't redirected, clear cookies and return to homepage.
     * New account creation is not tested here, we are basically using a user that is manually added to the db and checking for validation.
-
 Post-conditions
     User is validated with database and successfully signed into their account.
 
@@ -41,26 +44,28 @@ Post-conditions
 Use case name
     Add a recipe to the database
 Description
-    Test recipe submission by adding a test recipe to the database
+    Test recipe submission by adding a test recipe to the database and checking for re-submission
 Pre-conditions
     User has a valid user name and password and logged in
 Test steps
-    1. Navigate to login page
+    1. Navigate to LOGIN page
     2. Provide valid user name
     3. Provide valid password
-    4. Click login button
-    5. Navigate to create page
+    4. Click submit button
+    5. Navigate to CREATE page
     6. Add something in every field
-    7. Hit create button
+    7. Click submit button button
+    8. Without changing any fields, click submit again
 Expected result
-    User should get confirmation that they submitted a recip
+    User should get confirmation that they submitted a recipe and then, upon clicking submit again, a notification that recipe is already submitted
 Actual result
-    User gets a page error and cant create anything
+    User gets gets confirmation that they submitted a recipe and then resubmit notification
 Status (Pass/Fail)
-    Fail
+    Pass
 Notes
-    * The create page isn't fully running
+    * The CREATE page is very basic right now and does not have any extra options besides title and recipe
 Post-conditions
+    User submitted recipe is now in the Post table of the database
 
 ---
 Use case name
