@@ -27,8 +27,8 @@ Test steps
     2. open browser and delete cookies
     3. go to the url given by app
     4. click on CREATE
-    5. In Username, type "New_User"
-    6. In Password, type "Password"
+    5. In Username, type "new_user"
+    6. In Password, type "password"
     7. Click submit button
 Expected result
     User should login and be returned to HOME page
