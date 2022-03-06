@@ -3,16 +3,17 @@
 {% extends 'home.html' %}
 
 {% block content %}
-<form method="POST" action="/login">
+<form method="POST" action="/create">
     {{ form.csrf_token }}
     {% if form.csrf_token.errors %}
         <div class="warning">You have submitted an invalid CSRF token</div>
     {% endif %}
-    <div>{{ form.username.label }}: {{ form.username() }}</div>
-    <div>{{ form.password.label }}: {{ form.password() }}</div>
+    <div>{{ form.title.label }}: {{ form.title() }}</div>
+    <div>{{ form.recipe.label }}: {{ form.recipe() }}</div>
     <div>{{form.submit()}}</div>
 </form>
 <body>
+    Notifications:
     {% for mesg in get_flashed_messages() %}
     <h1>{{ mesg }}</h1>
     {% endfor %}

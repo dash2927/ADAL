@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user, logout_user
 
 
 db = SQLAlchemy()
@@ -41,30 +41,38 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    # @app.route('/hello')
-    # def hello():
-    #     return 'Hello, World!'
-
     # Init database app from sqlalchemy
     db.init_app(app)
     # Init login manager
     login_manager.init_app(app)
 
-    # if we are not using sqlalchemy:
-    # app.teardown_appcontext(close_db)
-    # app.cli.add_command(init_db_command)
+    # function to create all tables before request
+    @app.before_first_request
+    def create_tables():
+        db.create_all()
 
     with app.app_context():
         from . import home
         from . import login
+        from . import create
         app.register_blueprint(home.homebp)
         app.register_blueprint(login.loginbp)
+        app.register_blueprint(create.createbp)
 
         # Create Database Models
-        db.create_all()
-
-
-
-
+        # db.create_all()
+        create_tables()
+    # vvvDEBUG FOR LOGINvvv
+    # Create a test user
+    from .database import User
+    new_user = User('new_user', 'password')
+    with app.app_context():
+        db.session.add(new_user)
+        db.session.commit()
+    try:
+        new_user.email = 'bademail'
+    except ValueError:
+        print("test", flush=True)
+        new_user.email = 'good@email.com'
+    # ^^^DEBUG FOR LOGIN^^^
     return app
