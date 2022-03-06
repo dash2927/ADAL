@@ -15,25 +15,27 @@ Recipeezy
 Use case name
     Verify login with valid user name and password
 Description
-    Test the Google login page
+    Test for logging in only. This tests for access to the User database and
+    return to the previous page.
 Pre-conditions
-    User has valid user name and password
+    No preconditions
 Test steps
-    1. Navigate to login page
-    2. Provide valid user name
-    3. Provide valid password
+    1. Navigate to Login page
+    2. In Username, type "New_User"
+    3. In Password, type "Password"
     4. Click login button
 Expected result
-    User should be able to login
+    User should login and be returned to homepage
 Actual result
-    User is notified of succesful login and is allowed to return to home
+    User is logged in and returned to homepage
 Status (Pass/Fail)
     Pass
 Notes
-    N/A
+    * There is no notification of user being logged in. It will show up on flask CLI.
+    * New account creation is not tested here, we are basically using a user that is manually added to the db and checking for validation.
+
 Post-conditions
     User is validated with database and successfully signed into their account.
-    The account session details are logged in database.
 
 ---
 Use case name
@@ -57,26 +59,26 @@ Actual result
 Status (Pass/Fail)
     Fail
 Notes
-    The create page isn't fully running
+    * The create page isn't fully running
 Post-conditions
 
 ---
 Use case name
-    [entry]
+    Test database
 Description
-    [entry]
+    Tests database using unittest (addition, query, value change, password hashing)
 Pre-conditions
-    [entry]
+    No preconditions
 Test steps
-    1. Step 1 here
+    1. From project page, type `python -m unittest tests/test_database.py`
 Expected result
-    [entry]
+    All succesful tests
 Actual result
-    [entry]
+    All succesful tests
 Status (Pass/Fail)
-    Pass/Fail
+    Pass
 Notes
-    N/A
+    * This test only tests for the User and Post dbs. Future dbs will need added tests
 Post-conditions
-    [entry]
+    All tests pass
 

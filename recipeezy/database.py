@@ -66,9 +66,20 @@ class Post(db.Model):
     # One-to-one relationship with userinfo.id
     author = db.relationship("User", backref=db.backref("userinfo",
                                                         uselist=False))
-    upvotes = db.Column(db.Integer)
+    upvotes = db.Column(db.Integer, default=0)
     created = db.Column(db.DateTime, nullable=False,
                         server_default=db.func.current_timestamp())
     title = db.Column(db.Text, nullable=False)
-    body = db.Column(db.Text, nullable=False)
+    body = db.Column(db.Text)
 
+    def __init__(self, author_id, title):
+        self.author_id = author_id
+        self.title = title
+        self.upvotes = 0
+        user = User.query.filter_by(id=self.author_id).first()
+        user.posts += 1
+
+    def upvote(self):
+        user = User.query.filter_by(id=self.author_id).first()
+        user.upvotes += 1
+        self.upvotes += 1
