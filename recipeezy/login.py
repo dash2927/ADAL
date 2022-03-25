@@ -21,25 +21,6 @@ loginbp = Blueprint('login_bp',
 def unauthorized_callback():
     return redirect(url_for('login_bp.login'))
 
-
-def menu_selection(req):
-    # if 'username' in session:
-    #     username = escape(session['username'])
-    # else:
-    #     username = None
-    if req.form.get('menu', None):
-        return redirect(url_for('home_bp.home'))
-    elif req.form.get('login', None):
-        return redirect(url_for('login_bp.login'))
-    elif req.form.get('logout', None):
-        return redirect(url_for('login_bp.logout'))
-    elif req.form.get('create', None):
-        return redirect(url_for('create_bp.create'))
-    # elif req.form.get('search', None):
-    #     return redirect(url_for('search', username=username))
-    return render_template('home.html')
-
-
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(id)
@@ -56,15 +37,13 @@ def login():
         if user is not None:
             if user.verify_pwd(password):
                 login_user(user)
-                flash('Logged in succesfully')
                 return redirect(url_for('home_bp.home'))
             else:
-                flash("Incorrect password")
-        # else:
-            # this is temporary. it essentially just adds a constant new user
-            # replace this section with account creation redirect!
-    elif request.method == 'POST':
-        return menu_selection(request)
+                error_msg = f'Password is incorrect.'
+        else:
+            error_msg = f'{username} is not valid. Please make a new' + \
+            ' account or try another username.'
+        return render_template('login.html', form=form, error_msg=error_msg)
     return render_template('login.html', form=form)
 
 

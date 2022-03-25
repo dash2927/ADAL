@@ -4,7 +4,7 @@
 
 {% block content %}
 <main class="form-signin">
-    <form method="POST" action="{{ url_for('login_bp.signup') }}">
+    <form method="POST">
         {{ form.csrf_token }}
         {% if form.csrf_token.errors %}
             <div class="warning">You have submitted an invalid CSRF token</div>
@@ -16,10 +16,15 @@
             {{form.username.label(class_='form-label')}}
         </div>
         <div class="form-floating">
-            {{form.password.label(class_='form-label')}}
             {{form.password(class_='form-control')}}
+            {{form.password.label(class_='form-label')}}
         </div>
         {{form.submit(class_="w-100 btn btn-lg btn-danger")}}
+        {% if error_msg %}
+        <div class="alert alert-danger mt-3" role="alert">
+            <strong>Error: </strong> {{error_msg}}
+        </div>
+        {% endif %}
     </form>
 </main>
 {% endblock %}
