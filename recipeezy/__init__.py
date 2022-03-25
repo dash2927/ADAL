@@ -26,7 +26,9 @@ def create_app(test_config=None):
         SQLALCHEMY_ECHO=True,  # log statements issued to stderr
         # Folder options
         STATIC_FOLDER="static",
-        TEMPLATES_FOLDER="templates"
+        TEMPLATES_FOLDER="templates",
+        UPLOAD_FOLDER = "recipeezy/static/images",
+        ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     )
     if test_config is None:
         # load the instance config, if it exists, when not testing
