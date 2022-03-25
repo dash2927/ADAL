@@ -32,3 +32,12 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.form-create {
+  margin: 0% 7%;
+}
+
+.recipeIngredients .recipeSteps{
+  width: 90%;
+
+}
