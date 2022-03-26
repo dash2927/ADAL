@@ -60,12 +60,12 @@ class Post(db.Model):
     '''
     database table for recipe posts
     '''
-    __tablename__ = "post"
-    postid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    __tablename__ = "postinfo"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     author_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'),
                           nullable=False)
     # One-to-one relationship with userinfo.id
-    author = db.relationship("User", backref=db.backref("userinfo",
+    author = db.relationship("User", backref=db.backref("post_author",
                                                         uselist=False))
     upvotes = db.Column(db.Integer, default=0)
     created = db.Column(db.DateTime, nullable=False,
@@ -84,3 +84,16 @@ class Post(db.Model):
         user = User.query.filter_by(id=self.author_id).first()
         user.upvotes += 1
         self.upvotes += 1
+
+class Vote(db.Model):
+    '''
+    database table to manage voting
+    '''
+    __tablename__ = "voteinfo"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('postinfo.id'))
+    post = db.relationship('Post', backref=db.backref('voted_post',
+                                                      uselist=False))
+    user_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'))
+    user = db.relationship('User', backref=db.backref('voted_user',
+                                                      uselist=False))
