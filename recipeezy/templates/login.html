@@ -10,7 +10,6 @@
             <div class="warning">You have submitted an invalid CSRF token</div>
         {% endif %}
         <h1 class="h3 mt-5 mb-3 fw-normal">Login</h1>
-         
         <div class="form-floating mb-3">
             {{form.username(class_='form-control')}}
             {{form.username.label(class_='form-label')}}
@@ -19,7 +18,7 @@
             {{form.password(class_='form-control')}}
             {{form.password.label(class_='form-label')}}
         </div>
-        {{form.submit(class_="w-100 btn btn-lg btn-danger")}}
+        {{form.submit(class_='w-100 btn btn-lg btn-danger')}}
         {% if error_msg %}
         <div class="alert alert-danger mt-3" role="alert">
             <strong>Error: </strong> {{error_msg}}

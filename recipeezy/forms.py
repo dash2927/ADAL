@@ -19,7 +19,7 @@ class MakeAcctForm(FlaskForm):
     username = StringField('User Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     email = StringField('Email', validators=[Optional()])
-    submit = SubmitField('Create Account')
+    # submit = SubmitField('Create Account')
 
 
 class SubmitRecForm(FlaskForm):

@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
 
     @property
     def email(self):
-        raise ValueError("Error: Email is not retreivable")
+        raise ValueError("ERROR: Email is not retreivable")
 
     @email.setter
     def email(self, email):
@@ -50,7 +50,7 @@ class User(UserMixin, db.Model):
                         email)):
             self._email = email
         else:
-            raise ValueError("invalid email address")
+            raise ValueError("Invalid email address.")
 
     def verify_pwd(self, pwd):
         return check_password_hash(self._pwdhash, pwd)

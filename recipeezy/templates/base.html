@@ -32,8 +32,13 @@
             </ul>
             <!-- <form class="d-flex"> -->
               <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+            {% if current_user.is_authenticated %}
+              <h6 class="h6 pt-2 me-3" style="color: grey">{{ current_user.uname }} | {{current_user.upvotes}}</h6>
+              <a class="btn btn-outline-danger me-4" href="{{ url_for('login_bp.signout') }}">Logout</a>
+            {% else %}
               <a class="btn btn-outline-danger me-4" href="{{ url_for('login_bp.login') }}">Login</a>
               <a class="btn btn-outline-danger" href="{{ url_for('login_bp.signup') }}">Register</a>
+            {% endif %}
             <!-- </form> -->
           </div>
         </div>

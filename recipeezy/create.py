@@ -25,7 +25,7 @@ def allowed_file(filename):
 
 
 @createbp.route('/create', methods=('GET', 'POST'))
-# @login_required
+@login_required
 def create():
     # form = SubmitRecForm()
     # if form.validate_on_submit():
@@ -56,7 +56,7 @@ def create():
         print(type(steps))
 
         print(ingredients[1])
-        
+
         if not (name and category and description):
             return {'status': -1, 'message': 'Please fill every field'}
 
@@ -72,5 +72,5 @@ def create():
         # Add insert to database code here
 
         return {'status': 0, 'message': 'success'}
-        
-    return render_template('create.html')
+
+    return render_template('create.html', user=current_user)
