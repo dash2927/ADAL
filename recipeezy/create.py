@@ -40,6 +40,7 @@ def create():
     #         post.body = recipe
     #         db.session.add(post)
     #         db.session.commit()
+    form = SubmitRecForm()
     if request.method == 'POST':
         data = request.form['submitData']
         data = json.loads(data)
