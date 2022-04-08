@@ -4,3 +4,4 @@ Flask-SQLAlchemy==2.5.1
 Flask-Testing==0.8.1
 Flask-WTF==1.0.0
 SQLAlchemy==1.4.31
+gunicorn==19.0.0
