@@ -64,17 +64,4 @@ def create_app(test_config=None):
         # Create Database Models
         # db.create_all()
         create_tables()
-    # vvvDEBUG FOR LOGINvvv
-    # Create a test user
-    from .database import User
-    new_user = User('new_user', 'password')
-    with app.app_context():
-        db.session.add(new_user)
-        db.session.commit()
-    try:
-        new_user.email = 'bademail'
-    except ValueError:
-        print("test", flush=True)
-        new_user.email = 'good@email.com'
-    # ^^^DEBUG FOR LOGIN^^^
     return app
