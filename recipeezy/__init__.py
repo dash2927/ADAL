@@ -51,7 +51,7 @@ def create_app(test_config=None):
     # function to create all tables before request
     @app.before_first_request
     def create_tables():
-        db.create_all()
+        db.create_all(checkfirst=True)
 
     with app.app_context():
         from . import home
