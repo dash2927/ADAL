@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, logout_user
+from sqlalchemy.exc import OperationalError
 
 
 db = SQLAlchemy()
@@ -51,7 +52,10 @@ def create_app(test_config=None):
     # function to create all tables before request
     @app.before_first_request
     def create_tables():
-        db.create_all()
+        try:
+            db.create_all()
+        except OperationalError as e:
+            print("SQLAlchemy error: Tables already created", flush=True)
 
     with app.app_context():
         from . import home
