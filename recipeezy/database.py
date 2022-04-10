@@ -55,62 +55,63 @@ class User(UserMixin, db.Model):
     def verify_pwd(self, pwd):
         return check_password_hash(self._pwdhash, pwd)
 
-'''
-class Post(db.Model):
-    '''
-    database table for recipe posts
-    '''
-    __tablename__ = "postinfo"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    _filename = db.Column(db.Text)
-    author_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'),
-                          nullable=False)
-    # One-to-one relationship with userinfo.id
-    author = db.relationship("User", backref=db.backref("post_author",
-                                                        uselist=False))
-    upvotes = db.Column(db.Integer, default=1)
-    created = db.Column(db.DateTime, nullable=False,
-                        server_default=db.func.current_timestamp())
-    data = db.Column(db.JSON, nullable=False)
 
-    def __init__(self, author_id, data):
-        self.author_id = author_id
-        self.data = data
-        self.upvotes = 1
-        user = User.query.filter_by(id=self.author_id).first()
-        user.posts += 1
-
-    def upvote(self, amt):
-        user = User.query.filter_by(id=self.author_id).first()
-        user.upvotes += amt
-        self.upvotes += amt
-
-    @property
-    def image(self):
-        '''getter for image data'''
-        name = self._filename
-
-
-    @image.setter
-    def image(self, image_file):
-        '''setter for image data'''
-        self._filename = image_file.filename
-        S3_BUCKET = os.environ.get('S3_BUCKET')
-        s3 = boto3.client('s3')
-        boto3.client('S3')
-
-
-class Vote(db.Model):
-    '''
-    database table to manage voting
-    '''
-    __tablename__ = "voteinfo"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('postinfo.id'))
-    post = db.relationship('Post', backref=db.backref('voted_post',
-                                                      uselist=False))
-    user_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'))
-    user = db.relationship('User', backref=db.backref('voted_user',
-                                                      uselist=False))
-
-'''
+# class Post(db.Model):
+#     '''
+#     database table for recipe posts
+#     '''
+#
+#     __tablename__ = "postinfo"
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     _filename = db.Column(db.Text)
+#     author_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'),
+#                           nullable=False)
+#     # One-to-one relationship with userinfo.id
+#     author = db.relationship("User", backref=db.backref("post_author",
+#                                                         uselist=False))
+#     upvotes = db.Column(db.Integer, default=1)
+#     created = db.Column(db.DateTime, nullable=False,
+#                         server_default=db.func.current_timestamp())
+#     data = db.Column(db.JSON, nullable=False)
+#
+#     def __init__(self, author_id, data):
+#         self.author_id = author_id
+#         self.data = data
+#         self.upvotes = 1
+#         user = User.query.filter_by(id=self.author_id).first()
+#         user.posts += 1
+#
+#     def upvote(self, amt):
+#         user = User.query.filter_by(id=self.author_id).first()
+#         user.upvotes += amt
+#         self.upvotes += amt
+#
+#     @property
+#     def image(self):
+#         '''getter for image data'''
+#         name = self._filename
+#
+#
+#     @image.setter
+#     def image(self, image_file):
+#         '''setter for image data'''
+#         self._filename = image_file.filename
+#         S3_BUCKET = os.environ.get('S3_BUCKET')
+#         s3 = boto3.client('s3')
+#         boto3.client('S3')
+#
+#
+# class Vote(db.Model):
+#     '''
+#     database table to manage voting
+#     '''
+#     __tablename__ = "voteinfo"
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     post_id = db.Column(db.Integer, db.ForeignKey('postinfo.id'))
+#     post = db.relationship('Post', backref=db.backref('voted_post',
+#                                                       uselist=False))
+#     user_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'))
+#     user = db.relationship('User', backref=db.backref('voted_user',
+#                                                       uselist=False))
+#
+#
