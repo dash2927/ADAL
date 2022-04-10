@@ -24,7 +24,7 @@ def create_app(test_config=None):
         S3_BUCKET = "recipeezy.data",
         S3_KEY = "AKIAZK6PLAL7TET4SNNO",
         S3_SECRET = "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",
-        S3_LOCATION = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET),
+        S3_LOCATION = 'http://recipeezy.data.s3.amazonaws.com/',
         # DATABASE=os.path.join(app.instance_path, 'recipeezy.sqlite'),
         # SQL options
         SQLALCHEMY_TRACK_MODIFICATIONS=True,
