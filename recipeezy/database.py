@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     __tablename__ = "userinfo"
     id = db.Column(db.Integer, primary_key=True)
     uname = db.Column(db.String(32), nullable=False)
-    _pwdhash = db.Column(db.Text, nullable=False)
+    _pwdhash = db.Column(db.String(128), nullable=False)
     _email = db.Column(db.String(64), unique=True)
     posts = db.Column(db.Integer, default=0)
     upvotes = db.Column(db.Integer, default=0)
