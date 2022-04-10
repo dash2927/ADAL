@@ -15,6 +15,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     # Add configuration options:
     ENV = 'development'
+    ENV = 'production'
     app.config.from_mapping(
         # Main options
         FLASK_APP='home.py',
@@ -65,7 +66,7 @@ def create_app(test_config=None):
         try:
             db.create_all()
         except OperationalError as e:
-            print("SQLAlchemy error: Tables already created", flush=True)
+            print(f"SQLAlchemy error: {e}", flush=True)
 
     with app.app_context():
         from . import home
