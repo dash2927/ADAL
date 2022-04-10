@@ -14,16 +14,21 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     # Add configuration options:
+    ENV = 'development'
     app.config.from_mapping(
         # Main options
         FLASK_APP='home.py',
         SECRET_KEY='dev',  # replace with os.urandom(24),
-        FLASK_ENV='development',
+        FLASK_ENV=ENV,
         DEBUG=True,
+        S3_BUCKET = "recipeezy.data",
+        S3_KEY = "AKIAZK6PLAL7TET4SNNO",
+        S3_SECRET = "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",
+        S3_LOCATION = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET),
         # DATABASE=os.path.join(app.instance_path, 'recipeezy.sqlite'),
         # SQL options
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SQLALCHEMY_DATABASE_URI='sqlite:///db.sqlite3',
+        SQLALCHEMY_TRACK_MODIFICATIONS=True,
+        # SQLALCHEMY_DATABASE_URI='sqlite:///db.sqlite3',
         SQLALCHEMY_ECHO=True,  # log statements issued to stderr
         # Folder options
         STATIC_FOLDER="static",
@@ -31,6 +36,11 @@ def create_app(test_config=None):
         UPLOAD_FOLDER = "recipeezy/static/images",
         ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     )
+    # Set up postgresql for heroku:
+    if ENV == 'development':
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:'
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ktorfzoozadwle:95f08adfeb8e558d62c7ab82a977ff9a135e7f03f931dcf77f752df1ff31fcf6@ec2-54-157-79-121.compute-1.amazonaws.com:5432/d8v8dimv7h3a6o'
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)

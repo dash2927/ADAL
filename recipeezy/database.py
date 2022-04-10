@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 
-import re
+import re, boto3, os
 
 
 class User(UserMixin, db.Model):
@@ -62,28 +62,43 @@ class Post(db.Model):
     '''
     __tablename__ = "postinfo"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    _filename = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'),
                           nullable=False)
     # One-to-one relationship with userinfo.id
     author = db.relationship("User", backref=db.backref("post_author",
                                                         uselist=False))
-    upvotes = db.Column(db.Integer, default=0)
+    upvotes = db.Column(db.Integer, default=1)
     created = db.Column(db.DateTime, nullable=False,
                         server_default=db.func.current_timestamp())
-    title = db.Column(db.Text, nullable=False)
-    body = db.Column(db.Text)
+    data = db.Column(db.JSON, nullable=False)
 
-    def __init__(self, author_id, title):
+    def __init__(self, author_id, data):
         self.author_id = author_id
-        self.title = title
-        self.upvotes = 0
+        self.data = data
+        self.upvotes = 1
         user = User.query.filter_by(id=self.author_id).first()
         user.posts += 1
 
-    def upvote(self):
+    def upvote(self, amt):
         user = User.query.filter_by(id=self.author_id).first()
-        user.upvotes += 1
-        self.upvotes += 1
+        user.upvotes += amt
+        self.upvotes += amt
+
+    @property
+    def image(self):
+        '''getter for image data'''
+        name = self._filename
+
+
+    @image.setter
+    def image(self, image_file):
+        '''setter for image data'''
+        self._filename = image_file.filename
+        S3_BUCKET = os.environ.get('S3_BUCKET')
+        s3 = boto3.client('s3')
+        boto3.client('S3')
+
 
 class Vote(db.Model):
     '''

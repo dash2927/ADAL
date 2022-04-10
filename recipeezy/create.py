@@ -1,15 +1,13 @@
+import os, json, time, boto3
 from flask import Blueprint, abort, flash, redirect, session, render_template, request, url_for
 from flask import current_app as ca
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, logout_user, current_user, login_required
 from urllib.parse import urlparse, urljoin
+from werkzeug.utils import secure_filename
 from .database import User, Post
 from .forms import LoginForm, SubmitRecForm
-import os
-import json
-import time
 from . import login_manager, db
-from werkzeug.utils import secure_filename
 
 # from database import db
 
@@ -45,7 +43,7 @@ def create():
         data = request.form['submitData']
         data = json.loads(data)
         file = request.files.get('file')
-
+        print("***** --- test file: " + file.filename + '|' + file.content_type, flush=True)
         name = data.get('name')
         category = data.get('category')
         description = data.get('description')
@@ -67,10 +65,12 @@ def create():
 
             timestamp = int(time.time())
             filename = file.filename.rsplit(".", 1)
-            filename = filename[0] + str(timestamp) + "." + filename[1]
-            file.save(os.path.join(ca.config['UPLOAD_FOLDER'], filename))
+            filename = filename[0] + str(timestamp) + "." + filename[1] # filename
+            file.save(os.path.join(ca.config['UPLOAD_FOLDER'], filename)) # save file
 
         # Add insert to database code here
+        print("Submit_data: ", flush=True)
+        print(data, flush=True)
 
         return {'status': 0, 'message': 'success'}
 
