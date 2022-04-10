@@ -55,7 +55,7 @@ class User(UserMixin, db.Model):
     def verify_pwd(self, pwd):
         return check_password_hash(self._pwdhash, pwd)
 
-
+'''
 class Post(db.Model):
     '''
     database table for recipe posts
@@ -112,3 +112,5 @@ class Vote(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'))
     user = db.relationship('User', backref=db.backref('voted_user',
                                                       uselist=False))
+
+'''
