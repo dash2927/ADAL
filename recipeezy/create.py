@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, logout_user, current_user, login_required
 from urllib.parse import urlparse, urljoin
 from werkzeug.utils import secure_filename
-from .database import User#, Post
+from .database import User, Post
 from .forms import LoginForm, SubmitRecForm
 from . import login_manager, db
 

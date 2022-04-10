@@ -77,6 +77,5 @@ def create_app(test_config=None):
         app.register_blueprint(create.createbp)
 
         # Create Database Models
-        # db.create_all()
         create_tables()
     return app
