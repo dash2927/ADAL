@@ -7,7 +7,7 @@ from urllib.parse import urlparse, urljoin
 from werkzeug.utils import secure_filename
 from .database import User, Post
 from .forms import LoginForm, SubmitRecForm
-from . import login_manager, db, app
+from . import login_manager, db
 
 # from database import db
 
@@ -22,7 +22,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ca.config['ALLOWED_EXTENSIONS']
 
 def save_file(file):
-    if app.config['Flask_ENV'] == development:
+    if ca.config['Flask_ENV'] == development:
         print('test - dev', flush=True)
     else:
         print('test - prod', flush=True)
