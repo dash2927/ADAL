@@ -31,7 +31,7 @@ def save_file(file):
                           aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                           aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
         S3_BUCKET = os.environ.get('S3_BUCKET_NAME')
-        fields = {"acl": "public-read", "Content-Type": file.content_type}
+        fields = {"ACL": "public-read", "Content-Type": file.content_type}
         try:
             s3.upload_fileobj(
                 file,
