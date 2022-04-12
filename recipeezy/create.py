@@ -3,9 +3,10 @@ from flask import Blueprint, abort, flash, redirect, session, render_template, r
 from flask import current_app as ca
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, logout_user, current_user, login_required
+from sqlalchemy import exc
 from urllib.parse import urlparse, urljoin
 from werkzeug.utils import secure_filename
-from .database import User, Post
+from .database import User, Post, Vote
 from .forms import LoginForm, SubmitRecForm
 from . import login_manager, db
 
@@ -23,10 +24,11 @@ def allowed_file(filename):
 
 def save_file(file):
     if ca.config['FLASK_ENV'] == 'development':
-        print('test - dev', flush=True)
-        file.save(os.path.join(ca.config['UPLOAD_FOLDER'], file.filename))
+        try:
+            file.save(os.path.join(ca.config['UPLOAD_FOLDER'], file.filename))
+        except Exception as e:
+            return -1
     else:
-        print('test - prod', flush=True)
         s3 = boto3.client('s3',
                           aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                           aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
@@ -48,53 +50,44 @@ def save_file(file):
 @createbp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-    # form = SubmitRecForm()
-    # if form.validate_on_submit():
-    #     print("---Submit button pressed", flush=True)
-    #     title = request.form['title']
-    #     recipe = request.form['recipe']
-    #     if Post.query.filter_by(title=title).first() is not None:
-    #         flash("Recipe already in db")
-    #     else:
-    #         post = Post(current_user.id, title)  # add post to db
-    #         current_user.posts += 1
-    #         post.body = recipe
-    #         db.session.add(post)
-    #         db.session.commit()
-    form = SubmitRecForm()
     if request.method == 'POST':
         data = request.form['submitData']
         data = json.loads(data)
         file = request.files.get('file')
-        print("***** --- test file: " + file.filename + '|' + file.content_type, flush=True)
         name = data.get('name')
         category = data.get('category')
         description = data.get('description')
         tags = data.get('tags')
         steps = data.get('steps')
         ingredients = data.get('ingredients')
-
-        print(steps)
-        print(type(steps))
-
-        print(ingredients[1])
-
         if not (name and category and description):
             return {'status': -1, 'message': 'Please fill every field'}
-
         if file:
             if not allowed_file(file.filename):
                 return {'status': -1, 'message': 'Invalid image file format'}
             timestamp = int(time.time())
             file.filename = file.filename.rsplit(".", 1)
-            file.filename = file.filename[0] + str(timestamp) + "." + file.filename[1] # filename
+            # filename - using username to prevent upload attacks
+            file.filename = file.filename[0] + "__" +\
+                            name + "__" + current_user.uname +\
+                            "." + file.filename[1]
             file.filename = secure_filename(file.filename)
-            save_file(file)
-
+            output = save_file(file)
+            if output == -1:
+                return {'status': -1, 'message': 'Error when uploading file'}
         # Add insert to database code here
-        print("Submit_data: ", flush=True)
-        print(data, flush=True)
-
+        try:
+            post = Post(current_user.id, data)
+            post.filename = output
+            vote = Vote(current_user.id, post.id) # ensure user cant upvote own post
+            current_user.upvotes += 1
+            db.session.add(post)
+            db.session.add(vote)
+            db.session.commit()
+        except ValueError as e:
+            error_msg = e
+        except exc.IntegrityError:
+            error_msg = 'You have already posted this recipe.'
+            return {'status': -1, 'message': error_msg}
         return {'status': 0, 'message': 'success'}
-
     return render_template('create.html', user=current_user)

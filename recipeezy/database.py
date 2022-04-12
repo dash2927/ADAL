@@ -72,7 +72,7 @@ class Post(db.Model):
     upvotes = db.Column(db.Integer, default=1)
     created = db.Column(db.DateTime, nullable=False,
                         server_default=db.func.current_timestamp())
-    data = db.Column(db.JSON, nullable=False)
+    data = db.Column(db.JSON, unique=True, nullable=False)
 
     def __init__(self, author_id, data):
         self.author_id = author_id
@@ -87,18 +87,15 @@ class Post(db.Model):
         self.upvotes += amt
 
     @property
-    def image(self):
+    def filename(self):
         '''getter for image data'''
-        name = self._filename
+        return self._filename
 
 
-    @image.setter
-    def image(self, image_file):
+    @filename.setter
+    def filename(self, image_filename):
         '''setter for image data'''
-        self._filename = image_file.filename
-        S3_BUCKET = os.environ.get('S3_BUCKET')
-        s3 = boto3.client('s3')
-        boto3.client('S3')
+        self._filename = image_filename
 
 
 class Vote(db.Model):
@@ -113,5 +110,9 @@ class Vote(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'))
     user = db.relationship('User', backref=db.backref('voted_user',
                                                       uselist=False))
+    upvote = db.Column(db.Boolean, default=True, unique=False, nullable=False)
+    def __init__(self, post_id, user_id):
+        self.user_id = user_id
+        self.post_id = post_id
 
 
