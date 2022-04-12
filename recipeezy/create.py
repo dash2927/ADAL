@@ -24,12 +24,25 @@ def allowed_file(filename):
 def save_file(file):
     if ca.config['FLASK_ENV'] == 'development':
         print('test - dev', flush=True)
+        file.save(os.path.join(ca.config['UPLOAD_FOLDER'], file.filename))
     else:
         print('test - prod', flush=True)
         s3 = boto3.client('s3',
                           aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                           aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
-        S3_BUCKET = os.environ.get('S3_BUCKET')
+        S3_BUCKET = os.environ.get('S3_BUCKET_NAME')
+        fields = {"acl": "public-read", "Content-Type": file.content_type}
+        try:
+            s3.upload_fileobj(
+                file,
+                S3_BUCKET,
+                file.filename,
+                ExtraArgs=fields
+            )
+        except Exception as e:
+            print("AWS upload error: ", e)
+            return -1
+        return f"{ca.config['S3_LOCATION']}{file.filename}"
 
 
 @createbp.route('/create', methods=('GET', 'POST'))
@@ -72,12 +85,11 @@ def create():
         if file:
             if not allowed_file(file.filename):
                 return {'status': -1, 'message': 'Invalid image file format'}
-
             timestamp = int(time.time())
-            filename = file.filename.rsplit(".", 1)
-            filename = filename[0] + str(timestamp) + "." + filename[1] # filename
+            file.filename = file.filename.rsplit(".", 1)
+            file.filename = file.filename[0] + str(timestamp) + "." + file.filename[1] # filename
+            file.filename = secure_filename(file.filename)
             save_file(file)
-            file.save(os.path.join(ca.config['UPLOAD_FOLDER'], filename)) # save file
 
         # Add insert to database code here
         print("Submit_data: ", flush=True)
