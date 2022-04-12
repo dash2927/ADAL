@@ -22,7 +22,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ca.config['ALLOWED_EXTENSIONS']
 
 def save_file(file):
-    if ca.config['FLASK_ENV'] == development:
+    if ca.config['FLASK_ENV'] == 'development':
         print('test - dev', flush=True)
     else:
         print('test - prod', flush=True)
