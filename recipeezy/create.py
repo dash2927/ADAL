@@ -1,4 +1,4 @@
-import os, json, time, boto3
+import os, json, time, boto3, botocore
 from flask import Blueprint, abort, flash, redirect, session, render_template, request, url_for
 from flask import current_app as ca
 from flask_sqlalchemy import SQLAlchemy
@@ -20,6 +20,16 @@ createbp = Blueprint('create_bp',
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ca.config['ALLOWED_EXTENSIONS']
+
+def save_file(file):
+    if app.config['Flask_ENV'] == development:
+        print('test - dev', flush=True)
+    else:
+        print('test - prod', flush=True)
+        s3 = boto3.client('s3',
+                          aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
+                          aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
+        S3_BUCKET = os.environ.get('S3_BUCKET')
 
 
 @createbp.route('/create', methods=('GET', 'POST'))
@@ -66,6 +76,7 @@ def create():
             timestamp = int(time.time())
             filename = file.filename.rsplit(".", 1)
             filename = filename[0] + str(timestamp) + "." + filename[1] # filename
+            save_file(file)
             file.save(os.path.join(ca.config['UPLOAD_FOLDER'], filename)) # save file
 
         # Add insert to database code here
