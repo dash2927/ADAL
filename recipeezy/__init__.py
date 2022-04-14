@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, logout_user
+from sqlalchemy.exc import OperationalError
 
 
 db = SQLAlchemy()
@@ -12,22 +13,33 @@ login_manager.setup_app = "strong"
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    # Choose environment (change to production when using heroku):
+    ENV = 'development'
+    # ENV = 'production'
     # Add configuration options:
     app.config.from_mapping(
         # Main options
         FLASK_APP='home.py',
-        SECRET_KEY='dev',  # replace with os.urandom(24),
-        FLASK_ENV='development',
+        SECRET_KEY='dev',  # replace with os.urandom(24) on final push
+        FLASK_ENV=ENV,
         DEBUG=True,
-        # DATABASE=os.path.join(app.instance_path, 'recipeezy.sqlite'),
         # SQL options
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SQLALCHEMY_DATABASE_URI='sqlite:///db.sqlite3',
+        SQLALCHEMY_TRACK_MODIFICATIONS=True,
         SQLALCHEMY_ECHO=True,  # log statements issued to stderr
         # Folder options
         STATIC_FOLDER="static",
-        TEMPLATES_FOLDER="templates"
+        TEMPLATES_FOLDER="templates",
+        UPLOAD_FOLDER = "recipeezy/static/images",
+        ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     )
+    # Choose postgresql for heroku (outside development environment):
+    if ENV == 'development':
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.recipeezy'
+        app.config['DATABASE'] = os.path.join(app.instance_path,
+                                              'recipeezy.sqlite')
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ktorfzoozadwle:95f08adfeb8e558d62c7ab82a977ff9a135e7f03f931dcf77f752df1ff31fcf6@ec2-54-157-79-121.compute-1.amazonaws.com:5432/d8v8dimv7h3a6o'
+        app.config['S3_LOCATION'] = f"http://{os.environ.get('S3_BUCKET_NAME')}.s3.amazonaws.com/"
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
@@ -41,7 +53,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Init database app from sqlalchemy
+    # Init app
     db.init_app(app)
     # Init login manager
     login_manager.init_app(app)
@@ -49,9 +61,13 @@ def create_app(test_config=None):
     # function to create all tables before request
     @app.before_first_request
     def create_tables():
-        db.create_all()
+        try:
+            db.create_all()
+        except OperationalError as e:
+            print(f"SQLAlchemy error: {e}", flush=True)
 
     with app.app_context():
+        # Add all blueprints
         from . import home
         from . import login
         from . import create
@@ -60,19 +76,5 @@ def create_app(test_config=None):
         app.register_blueprint(create.createbp)
 
         # Create Database Models
-        # db.create_all()
         create_tables()
-    # vvvDEBUG FOR LOGINvvv
-    # Create a test user
-    from .database import User
-    new_user = User('new_user', 'password')
-    with app.app_context():
-        db.session.add(new_user)
-        db.session.commit()
-    try:
-        new_user.email = 'bademail'
-    except ValueError:
-        print("test", flush=True)
-        new_user.email = 'good@email.com'
-    # ^^^DEBUG FOR LOGIN^^^
     return app

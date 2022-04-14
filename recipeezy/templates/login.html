@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 
-{% extends 'home.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
-<form method="POST" action="/login">
-    {{ form.csrf_token }}
-    {% if form.csrf_token.errors %}
-        <div class="warning">You have submitted an invalid CSRF token</div>
-    {% endif %}
-    <div>{{ form.username.label }}: {{ form.username() }}</div>
-    <div>{{ form.password.label }}: {{ form.password() }}</div>
-    <div>{{form.submit()}}</div>
-</form>
-<body>
-    {% for mesg in get_flashed_messages() %}
-    <h1>{{ mesg }}</h1>
-    {% endfor %}
-</body>
+<main class="form-signin">
+    <form method="POST">
+        {{ form.csrf_token }}
+        {% if form.csrf_token.errors %}
+            <div class="warning">You have submitted an invalid CSRF token</div>
+        {% endif %}
+        <h1 class="h3 mt-5 mb-3 fw-normal">Login</h1>
+        <div class="form-floating mb-3">
+            {{form.username(class_='form-control')}}
+            {{form.username.label(class_='form-label')}}
+        </div>
+        <div class="form-floating">
+            {{form.password(class_='form-control')}}
+            {{form.password.label(class_='form-label')}}
+        </div>
+        {{form.submit(class_='w-100 btn btn-lg btn-danger')}}
+        {% if error_msg %}
+        <div class="alert alert-danger mt-3" role="alert">
+            <strong>Error: </strong> {{error_msg}}
+        </div>
+        {% endif %}
+    </form>
+</main>
 {% endblock %}

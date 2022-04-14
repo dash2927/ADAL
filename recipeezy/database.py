@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 
-import re
+import re, boto3, os
 
 
 class User(UserMixin, db.Model):
@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     __tablename__ = "userinfo"
     id = db.Column(db.Integer, primary_key=True)
     uname = db.Column(db.String(32), nullable=False)
-    _pwdhash = db.Column(db.String(64), nullable=False)
+    _pwdhash = db.Column(db.String(128), nullable=False)
     _email = db.Column(db.String(64), unique=True)
     posts = db.Column(db.Integer, default=0)
     upvotes = db.Column(db.Integer, default=0)
@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
 
     @property
     def email(self):
-        raise ValueError("Error: Email is not retreivable")
+        raise ValueError("ERROR: Email is not retreivable")
 
     @email.setter
     def email(self, email):
@@ -50,7 +50,7 @@ class User(UserMixin, db.Model):
                         email)):
             self._email = email
         else:
-            raise ValueError("invalid email address")
+            raise ValueError("Invalid email address.")
 
     def verify_pwd(self, pwd):
         return check_password_hash(self._pwdhash, pwd)
@@ -60,27 +60,59 @@ class Post(db.Model):
     '''
     database table for recipe posts
     '''
-    __tablename__ = "post"
-    postid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    __tablename__ = "postinfo"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    _filename = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'),
                           nullable=False)
     # One-to-one relationship with userinfo.id
-    author = db.relationship("User", backref=db.backref("userinfo",
+    author = db.relationship("User", backref=db.backref("post_author",
                                                         uselist=False))
-    upvotes = db.Column(db.Integer, default=0)
+    upvotes = db.Column(db.Integer, default=1)
     created = db.Column(db.DateTime, nullable=False,
                         server_default=db.func.current_timestamp())
-    title = db.Column(db.Text, nullable=False)
-    body = db.Column(db.Text)
+    data = db.Column(db.JSON, unique=True, nullable=False)
 
-    def __init__(self, author_id, title):
+    def __init__(self, author_id, data):
         self.author_id = author_id
-        self.title = title
-        self.upvotes = 0
+        self.data = data
+        self.upvotes = 1
         user = User.query.filter_by(id=self.author_id).first()
         user.posts += 1
 
-    def upvote(self):
+    def upvote(self, amt):
         user = User.query.filter_by(id=self.author_id).first()
-        user.upvotes += 1
-        self.upvotes += 1
+        user.upvotes += amt
+        self.upvotes += amt
+
+    @property
+    def filename(self):
+        '''getter for image data'''
+        return self._filename
+
+
+    @filename.setter
+    def filename(self, image_filename):
+        '''setter for image data'''
+        self._filename = image_filename
+
+
+class Vote(db.Model):
+    '''
+    database table to manage voting
+    '''
+    __tablename__ = "voteinfo"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('postinfo.id'))
+    post = db.relationship('Post', backref=db.backref('voted_post',
+                                                      uselist=False))
+    user_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'))
+    user = db.relationship('User', backref=db.backref('voted_user',
+                                                      uselist=False))
+    upvote = db.Column(db.Boolean, default=True, unique=False, nullable=False)
+    def __init__(self, post_id, user_id):
+        self.user_id = user_id
+        self.post_id = post_id
+
+

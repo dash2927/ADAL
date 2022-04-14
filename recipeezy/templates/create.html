@@ -1,21 +1,172 @@
 <!DOCTYPE html>
 
-{% extends 'home.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
-<form method="POST" action="/create">
-    {{ form.csrf_token }}
-    {% if form.csrf_token.errors %}
-        <div class="warning">You have submitted an invalid CSRF token</div>
-    {% endif %}
-    <div>{{ form.title.label }}: {{ form.title() }}</div>
-    <div>{{ form.recipe.label }}: {{ form.recipe() }}</div>
-    <div>{{form.submit()}}</div>
-</form>
-<body>
-    Notifications:
-    {% for mesg in get_flashed_messages() %}
-    <h1>{{ mesg }}</h1>
-    {% endfor %}
-</body>
+
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<div id="app">
+  <form class="row g-3 form-create text-danger">
+    <h2 class="text-center">Create New Recipe</h2>
+    <div v-if="error" class="alert alert-danger text-center" role="alert">
+      ${error}
+    </div>
+    <h4>Name</h4>
+    <div class="col-12">
+      <input v-model="submitData.name" type="text" required class="form-control" :class="{ 'is-invalid': error && !submitData.name }">
+      <div class="invalid-feedback">
+        Please add a name
+      </div>
+    </div>
+    <h4>Category</h4>
+    <div class="col-12">
+      <input v-model="submitData.category" type="text" class="form-control" :class="{ 'is-invalid': error && !submitData.category }">
+      <div class="invalid-feedback">
+        Please add a category
+      </div>
+    </div>
+    <h4>Image</h4>
+    <div class="col-12">
+      <div class="mb-3">
+        <input class="form-control" type="file" ref="file" @change="addImage">
+      </div>
+    </div>
+    <h4>Description</h4>
+    <div class="col-12">
+      <textarea v-model="submitData.description" class="form-control" :class="{ 'is-invalid': error && !submitData.description }"></textarea>
+      <div class="invalid-feedback">
+        Please add a description
+      </div>
+    </div>
+    <h4>Ingredients</h4>
+    <div class="col-md-11" v-for="(ingredient, i) in submitData.ingredients" :key="i">
+      <div class="row">
+        <div class="col-md-2">
+          <input v-model="submitData.ingredients[i].quantity" type="number" class="form-control">
+        </div>
+        <div class="col-md-10">
+          <div class="input-group">
+            <input v-model="submitData.ingredients[i].name" type="text" class="form-control recipeIngredients">
+            <div class="input-group-append">
+              <button class="btn" type="button" @click="removeIngredient(i)">x</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <button type="button" class="btn btn-danger float-end" @click="addIngredient">+</button>
+    </div>
+    <h4>Steps</h4>
+    <div class="col-md-11" v-for="(step, i) in submitData.steps" :key="i">
+      <div class="input-group">
+        <textarea v-model="submitData.steps[i]" type="text" class="form-control recipeSteps"></textarea>
+        <div class="input-group-append">
+          <button class="btn" type="button" @click="removeStep(i)">x</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <button type="button" class="btn btn-danger float-end" @click="addStep">+</button>
+    </div>
+    <h4>Tags</h4>
+    <div class="col-md-11" v-for="(tag, i) in submitData.tags" :key="i">
+      <div class="input-group">
+        <input v-model="submitData.tags[i]" type="text" class="form-control recipeTags">
+        <div class="input-group-append">
+          <button class="btn " type="button" @click="removeTag(i)">x</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <button type="button" class="btn btn-danger float-end" @click="addTag">+</button>
+    </div>
+    <div class="col-12 text-center">
+      <button type="button" class="btn btn-danger" @click="submitRecipe">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // const axios = require('axios');
+  Vue.createApp({
+    delimiters: ['${', '}'],
+    data() {
+      return {
+        imageFile: null,
+        submitData: {
+          name: '',
+          category: '',
+          description: '',
+          tags: [
+            '',
+          ],
+          ingredients: [
+            {'name': '', quantity: ""},
+          ],
+          steps: [
+            '',
+          ],
+        },
+        error: ''
+      }
+    },
+    methods: {
+      submitRecipe() {
+        this.error = ""
+        let formData = new FormData();
+        formData.append('submitData', JSON.stringify(this.submitData))
+        formData.append('file', this.imageFile)
+        let obj = this;
+        axios.post('/create', formData, {
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+          .then(response => {
+            // handle success
+            if (response.data.status == -1) {
+              obj.error = response.data.message
+              window.scrollTo(0,0)
+            } else {
+              console.log(response.data.message)
+            }
+          })
+          .catch(error => {
+            obj.error = error;
+            window.scrollTo(0, 0)
+          })
+
+      },
+      addIngredient() {
+        this.submitData.ingredients.push({'name': '', quantity: ""});
+      },
+      removeIngredient(index) {
+        this.submitData.ingredients.splice(index, 1);
+        if (this.submitData.ingredients.length == 0) this.addIngredient()
+      },
+      addStep() {
+        this.submitData.steps.push("");
+      },
+      removeStep(index) {
+        this.submitData.steps.splice(index, 1);
+        if (this.submitData.steps.length == 0) this.addStep()
+      },
+      addTag() {
+        this.submitData.tags.push("");
+      },
+      removeTag(index) {
+        this.submitData.tags.splice(index, 1);
+        if (this.submitData.tags.length == 0) this.addTag()
+      },
+      addImage() {
+        this.imageFile = this.$refs.file.files[0]
+        console.log(this.imageFile)
+      }
+    }
+  }).mount('#app')
+</script>
 {% endblock %}

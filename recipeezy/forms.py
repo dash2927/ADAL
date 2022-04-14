@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Optional
+from wtforms import FormField, FieldList, FileField, IntegerField, StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Optional, Regexp
 
 
 class LoginForm(FlaskForm):
@@ -19,7 +19,15 @@ class MakeAcctForm(FlaskForm):
     username = StringField('User Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     email = StringField('Email', validators=[Optional()])
-    submit = SubmitField('Create Account')
+    # submit = SubmitField('Create Account')
+
+
+class IngredientForm(FlaskForm):
+    '''
+    Form for ingredient measurements
+    '''
+    amount = IntegerField('Amount')
+    ing = StringField('Ingredient')
 
 
 class SubmitRecForm(FlaskForm):
@@ -27,5 +35,12 @@ class SubmitRecForm(FlaskForm):
     Form to Submit a Recipe
     '''
     title = StringField('Recipe Title', validators=[DataRequired()])
-    recipe = TextAreaField('Recipe', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    category = StringField('Category', validators=[DataRequired()])
+    image = FileField('Image File',
+                      validators=[Regexp(u'^.*(\.jpeg|\.png)')])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    ingredients = FieldList(FormField(IngredientForm), min_entries=1)
+    steps = FieldList(TextAreaField('Steps', validators=[DataRequired()]), min_entries=1)
+    tags = FieldList(StringField('Tags', validators=[Optional()]), min_entries=0)
+    # submit = SubmitField('Submit')
+

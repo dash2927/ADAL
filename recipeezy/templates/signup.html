@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="form-signin">
+    <form method="POST">
+        <h1 class="h3 mt-5 mb-3 fw-normal">Sign Up</h1>
+        <div class="form-floating mb-3">
+            {{ form.username(class_='form-control') }}
+            {{ form.username.label(class_='form-label') }}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.email(class_='form-control') }}
+            {{ form.email.label(class_='form-label') }}
+        </div>
+        <div class="form-floating">
+            {{ form.password(class_='form-control') }}
+            {{ form.password.label(class_='form-label') }}
+        </div>
+        <!-- { form.submit(class_='w-100 btn btn-lg btn-danger') } -->
+        <button class="w-100 btn btn-lg btn-danger" type="submit">Sign Up</button>
+        {% if error_msg %}
+        <div class="alert alert-danger mt-3" role="alert">
+            <strong>Error: </strong> {{error_msg}}
+        </div>
+        {% endif %}
+    </form>
+</main>
+{% endblock %}
