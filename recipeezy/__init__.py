@@ -39,10 +39,10 @@ def create_app(test_config=None):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.recipeezy'
         app.config['DATABASE'] = os.path.join(app.instance_path,
                                               'recipeezy.sqlite')
-        # if os.path.exists(os.path.join(app.instance_path,
-        #                                "/static/words.csv")):
-        with open(os.path.join(app.instance_path, "static/words.txt"), 'r') as f:
-            words = json.load(f)
+        if os.path.exists(os.path.join(app.instance_path,
+                                       "static/words.csv")):
+            with open(os.path.join(app.instance_path, "static/words.txt"), 'r') as f:
+                words = json.load(f)
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ktorfzoozadwle:95f08adfeb8e558d62c7ab82a977ff9a135e7f03f931dcf77f752df1ff31fcf6@ec2-54-157-79-121.compute-1.amazonaws.com:5432/d8v8dimv7h3a6o'
         app.config['S3_LOCATION'] = f"http://{os.environ.get('S3_BUCKET_NAME')}.s3.amazonaws.com/"

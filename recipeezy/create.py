@@ -6,7 +6,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from sqlalchemy import exc
 from urllib.parse import urlparse, urljoin
 from werkzeug.utils import secure_filename
-from .database import User, Post, Vote
+from .database import User, Post, Vote, Tag
 from .forms import LoginForm, SubmitRecForm
 from . import login_manager, db
 
@@ -28,6 +28,7 @@ def save_file(file):
             file.save(os.path.join(ca.config['UPLOAD_FOLDER'], file.filename))
         except Exception as e:
             return -1
+        return f"{os.path.join(ca.config['UPLOAD_FOLDER'], file.filename)}"
     else:
         s3 = boto3.client('s3',
                           aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
@@ -75,18 +76,27 @@ def create():
             output = save_file(file)
             if output == -1:
                 return {'status': -1, 'message': 'Error when uploading file'}
-        # Add insert to database code here
         try:
-            post = Post(current_user.id, data)
-            post.filename = output
-            vote = Vote(current_user.id, post.id) # ensure user cant upvote own post
-            current_user.upvotes += 1
+            print("***********OUTPUT: ", flush=True, end='')
+            print(output, flush=True)
+            post = Post(current_user.id, data, output)
+            db.session.commit()
             db.session.add(post)
+            print(f"*********Post ID: {post.id}")
+            print(f"*********Current_User ID: {current_user.id}")
+            vote = Vote(user_id=current_user.id, post_id=post.id) # ensure user cant upvote own post
+            for tagi in tags:
+                tag = Tag(post_id=vote.post_id, tag=tagi)
+                db.session.add(tag)
+            current_user.upvotes += 1
             db.session.add(vote)
             db.session.commit()
         except ValueError as e:
+            db.session.flush()
+            db.session.rollback()
             error_msg = e
-        except exc.IntegrityError:
+        except exc.IntegrityError as e:
+            print(e, flush=True)
             error_msg = 'You have already posted this recipe.'
             return {'status': -1, 'message': error_msg}
         return {'status': 0, 'message': 'success'}

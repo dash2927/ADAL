@@ -63,21 +63,27 @@ class Post(db.Model):
 
     __tablename__ = "postinfo"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    _filename = db.Column(db.Text)
-    author_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'),
+    name = db.Column(db.String, nullable=False)
+    _filename = db.Column(db.String(128), nullable=False)
+    author_id = db.Column(db.Integer,
+                          db.ForeignKey('userinfo.id'),
                           nullable=False)
     # One-to-one relationship with userinfo.id
-    author = db.relationship("User", backref=db.backref("post_author",
-                                                        uselist=False))
+    author = db.relationship("User",
+                             primaryjoin='Post.author_id==User.id',
+                             backref=db.backref("post_author",
+                                                uselist=False))
     upvotes = db.Column(db.Integer, default=1)
     created = db.Column(db.DateTime, nullable=False,
                         server_default=db.func.current_timestamp())
     data = db.Column(db.JSON, unique=True, nullable=False)
 
-    def __init__(self, author_id, data):
+    def __init__(self, author_id, data, filename):
         self.author_id = author_id
         self.data = data
+        self.name = data['name']
         self.upvotes = 1
+        self._filename = filename
         user = User.query.filter_by(id=self.author_id).first()
         user.posts += 1
 
@@ -104,15 +110,35 @@ class Vote(db.Model):
     '''
     __tablename__ = "voteinfo"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('postinfo.id'))
-    post = db.relationship('Post', backref=db.backref('voted_post',
-                                                      uselist=False))
+    post_id = db.Column(db.Integer, db.ForeignKey('postinfo.id'),
+                        nullable=False)
+    post = db.relationship('Post',
+                           primaryjoin='Post.id==Vote.post_id',
+                           backref=db.backref('voted_post',
+                                              uselist=False))
     user_id = db.Column(db.Integer, db.ForeignKey('userinfo.id'))
     user = db.relationship('User', backref=db.backref('voted_user',
                                                       uselist=False))
     upvote = db.Column(db.Boolean, default=True, unique=False, nullable=False)
-    def __init__(self, post_id, user_id):
-        self.user_id = user_id
-        self.post_id = post_id
 
 
+class Tag(db.Model):
+    '''
+    database table to link tags to post id
+    '''
+    __tablename__= "taginfo"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    _tag = db.Column(db.String(16), )
+    post_id = db.Column(db.Integer, db.ForeignKey('postinfo.id'))
+    post = db.relationship('Post', backref=db.backref('taged_post',
+                                                      uselist=False))
+
+    @property
+    def tag(self):
+        return self._tag
+
+    @tag.setter
+    def tag(self, tag):
+        assert len(tag) <= 10, "Tag must be smaller than 10 characters"
+        self._tag = tag
+        self._tag = tag

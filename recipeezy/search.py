@@ -14,7 +14,7 @@ from . import login_manager, db
 
 # from database import db
 
-createbp = Blueprint('search_bp',
+searchbp = Blueprint('search_bp',
                      __name__,
                     #  url_prefix='/',
                      template_folder='templates',
@@ -46,13 +46,12 @@ def load_file(key):
 def search(Post, data):
     if request.method == 'POST':
         print('Test', flush=True)
-    post = Post.query.filter_by(=).first()
     return render_template('search.html')
 
 
 
-@searchbp.route('/<data.name>', methods=('GET'))
-def recipe(Post, data):
+@searchbp.route('/<name>', methods=('GET',))
+def recipe(Post, data, name):
     '''
     Page for recipe data.
 
