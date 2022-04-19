@@ -28,7 +28,7 @@ def save_file(file):
             file.save(os.path.join(ca.config['UPLOAD_FOLDER'], file.filename))
         except Exception as e:
             return -1
-        return f"{os.path.join(ca.config['UPLOAD_FOLDER'], file.filename)}"
+        return f"{os.path.join('static/images', file.filename)}"
     else:
         s3 = boto3.client('s3',
                           aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
