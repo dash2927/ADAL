@@ -41,7 +41,7 @@
             </span>
         </div>
         <img class="recipe-img"
-        src={{'static/images/test_image_08__Baked_Cod_Burgers__username_4.jpeg'}} width=50%>
+        src={{post.filename}} width=50%>
         <div class="ingredient-container">
         <h3 style="font-variant: small-caps">Ingredients</h3>
         {% for step in post.data['ingredients'] %}
