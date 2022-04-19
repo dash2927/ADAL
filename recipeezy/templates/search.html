@@ -1,16 +1,64 @@
 <!DOCTYPE html>
-
-{% extends 'home.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
-<h1>
-Woops, only one recipe available. Looks pretty good though!
-</h1>
-<img src={{url_for('static', filename='Key_Lime_Cake.png')}} width=50% height=50%>
-<div>
-{{text}}
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<div id="app">
+  <form class="row g-3 form-create text-danger">
+    <h2 class="text-center">Create New Recipe</h2>
+    <div v-if="error" class="alert alert-danger text-center" role="alert">
+      ${error}
+    </div>
+    <h4>Name</h4>
+    <div class="col-12">
+      <input v-model="searchQuery.name" type="text" required class="form-control" :class="{ 'is-invalid': error && !searchQuery.name }">
+      <div class="invalid-feedback">
+        Search for a recipe
+      </div>
+    </div>
+  </form>
 </div>
-<style>
-div {white-space: pre-wrap;}
-</style>
+
+<script>
+  // const axios = require('axios');
+  Vue.createApp({
+    delimiters: ['${', '}'],
+    data() {
+      return {
+        searchQuery,
+        error: ''
+      }
+    },
+    methods: {
+      searchRecipe() {
+        this.error = ""
+        let formData = new FormData();
+        formData.append('searchQuery', JSON.stringify(this.searchQuery))
+        let obj = this;
+        axios.post('/search', formData, {
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+          .then(response => {
+            // handle success
+            if (response.data.status == -1) {
+              obj.error = response.data.message
+              window.scrollTo(0,0)
+            } else {
+              console.log(response.data.message)
+            }
+          })
+          .catch(error => {
+            obj.error = error;
+            window.scrollTo(0, 0)
+          })
+
+      }
+    }
+  }).mount('#app')
+</script>
 {% endblock %}

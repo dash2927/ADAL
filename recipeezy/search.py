@@ -5,7 +5,7 @@ from flask import Blueprint, abort, flash, redirect, session, render_template, r
 from flask import current_app as ca
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, logout_user, current_user, login_required
-from sqlalchemy import exc
+from sqlalchemy import exc, and_
 from urllib.parse import urlparse, urljoin
 from werkzeug.utils import secure_filename
 from .database import User, Post, Vote
@@ -19,11 +19,11 @@ searchbp = Blueprint('search_bp',
                     #  url_prefix='/',
                      template_folder='templates',
                      static_folder='static')
-
+'''
 def load_file(key):
     if ca.config['FLASK_ENV'] == 'development':
         try:
-            file.load(os.path.join(ca.config['UPLOAD_FOLDER'], key))
+
         except Exception as e:
             return -1
     else:
@@ -39,19 +39,20 @@ def load_file(key):
             print("AWS upload error: ", e)
             return -1
         return image
-
+'''
 
 @searchbp.route('/search', methods=('GET', 'POST'))
 @login_required
-def search(Post, data):
+def search():
     if request.method == 'POST':
         print('Test', flush=True)
-    return render_template('search.html')
+    post = Post.query.filter_by(name="Baked Cod Burgers").first()
+    print(post.name)
+    # return render_template('search_bp.recipe', post=post, name=post.name)
+    return recipe(post)
 
 
-
-@searchbp.route('/<name>', methods=('GET',))
-def recipe(Post, data, name):
+def recipe(post):
     '''
     Page for recipe data.
 
@@ -59,5 +60,12 @@ def recipe(Post, data, name):
           details all information of the recipe post
     data : dictionary : json data on the recipe post
     '''
-    return
-
+    print(f"**************{post.filename}", flush=True)
+    author = User.query.filter_by(id = post.author_id).first()
+    vote = Vote.query.filter_by(user_id=current_user.id,
+                                post_id=post.id).first()
+    if vote is not None:
+        upvote = vote.upvote
+    upvote = "null"
+    return render_template('recipe.html', name=post.name,
+                           post=post, author=author, upvote=upvote)
