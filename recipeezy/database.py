@@ -78,7 +78,7 @@ class Post(db.Model):
                         server_default=db.func.current_timestamp())
     data = db.Column(db.JSON, nullable=False)
     # delete when reroute gets implemented
-    hash_values = db.Column(db.String(32), default="", nullable=False)
+    hash_values = db.Column(db.String(32), nullable=False, unique=True)
 
     def __init__(self, author_id, data, filename):
         self.author_id = author_id
