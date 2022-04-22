@@ -78,17 +78,17 @@ class Post(db.Model):
                         server_default=db.func.current_timestamp())
     data = db.Column(db.JSON, nullable=False)
     # delete when reroute gets implemented
-    hash_values = db.Column(db.String(32), nullable=False, unique=True)
+    # hash_values = db.Column(db.String(32), nullable=False, unique=True)
 
     def __init__(self, author_id, data, filename):
         self.author_id = author_id
         self.data = data
         # delete when reroute gets implemented
-        self.hash_values = hashlib.md5(
-                                json.dumps(
-                                    data,
-                                    sort_keys=True
-                                ).encode("utf-8")).hexdigest()
+        # self.hash_values = hashlib.md5(
+        #                         json.dumps(
+        #                             data,
+        #                             sort_keys=True
+        #                         ).encode("utf-8")).hexdigest()
         self.name = data['name']
         self.upvotes = 1
         self._filename = filename

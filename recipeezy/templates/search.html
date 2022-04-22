@@ -6,14 +6,19 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <div id="app">
-  <form class="row g-3 form-create text-danger">
-    <h2 class="text-center">Create New Recipe</h2>
+  <form class="row g-3 form-create text-danger" @submit.prevent="submitQuery">
+    <h2 class="text-center">Search for a Recipe</h2>
     <div v-if="error" class="alert alert-danger text-center" role="alert">
       ${error}
     </div>
-    <h4>Name</h4>
     <div class="col-12">
-      <input v-model="searchQuery.name" type="text" required class="form-control" :class="{ 'is-invalid': error && !searchQuery.name }">
+      <input v-model="searchQuery" type="text"
+       style="float: left; width: calc(100% - 100px);" 
+       required 
+       class="form-control":class="{ 'is-invalid': error && !searchQuery }">
+      <div class="col-12 text-center">
+        <button type="button" class="btn btn-danger" @click="submitQuery">Search</button>
+      </div>
       <div class="invalid-feedback">
         Search for a recipe
       </div>
@@ -27,12 +32,12 @@
     delimiters: ['${', '}'],
     data() {
       return {
-        searchQuery,
+        searchQuery: null,
         error: ''
       }
     },
     methods: {
-      searchRecipe() {
+      submitQuery() {
         this.error = ""
         let formData = new FormData();
         formData.append('searchQuery', JSON.stringify(this.searchQuery))
