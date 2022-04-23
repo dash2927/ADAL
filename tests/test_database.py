@@ -126,6 +126,39 @@ class SQLTestCase(TestCase):
     #     cross_ref = User.query.filter_by(id=another_post.author_id).first()
     #     self.assertEqual(cross_ref, second_user)
 
+    #Testing for post, vote, tag
+
+    # def test_post_db(self):
+    #     print()
+    #     print("Testing post db")
+    #     first_user = User("First_User", "password1")
+    #     second_user = User("Second_User", "password2")
+    #     db.session.add(first_user)
+    #     db.session.add(second_user)
+    #     db.session.commit()
+
+    def test_vote_db(self):
+        print()
+        print("Testing vote db")
+        first_user = User("First_User", "password1")
+        second_user = User("Second_User", "password2")
+        db.session.add(first_user)
+        db.session.add(second_user)
+        db.session.commit()
+        
+        
+
+    # def test_tag_db(self):
+    #     print()
+    #     print("Testing tag votes")
+    #     first_user = User("First_User", "password1")
+    #     second_user = User("Second_User", "password2")
+    #     db.session.add(first_user)
+    #     db.session.add(second_user)
+    #     db.session.commit()
+
+    
+
 
 # Main: Run Test Cases
 if __name__ == '__main__':
