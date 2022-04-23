@@ -2,12 +2,13 @@ import os, json, boto3, botocore
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, logout_user
-from fast_autocomplete.misc import read_csv_gen
+# from fast_autocomplete.misc import read_csv_gen
 from sqlalchemy.exc import OperationalError
-
+from botocore.errorfactory import ClientError
 
 db = SQLAlchemy()
 words = {}
+tags = {}
 login_manager = LoginManager()
 login_manager.setup_app = "strong"
 
@@ -39,10 +40,15 @@ def create_app(test_config=None):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.recipeezy'
         app.config['DATABASE'] = os.path.join(app.instance_path,
                                               'recipeezy.sqlite')
-        if os.path.exists(os.path.join(app.instance_path,
-                                       "static/words.csv")):
-            with open(os.path.join(app.instance_path, "static/words.txt"), 'r') as f:
-                words = json.load(f)
+        # if os.path.exists(os.path.join(app.instance_path,
+        #                                "static/words.txt")):
+        #     with open(os.path.join(app.instance_path, "static/words.txt"), 'r') as f:
+        #         words = json.load(f)
+        # if os.path.exists(os.path.join(app.instance_path,
+        #                                "static/tags.txt")):
+        #     with open(os.path.join(app.instance_path, "static/synonyms.txt"), 'r') as f:
+        #         words = json.load(f)
+
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ktorfzoozadwle:95f08adfeb8e558d62c7ab82a977ff9a135e7f03f931dcf77f752df1ff31fcf6@ec2-54-157-79-121.compute-1.amazonaws.com:5432/d8v8dimv7h3a6o'
         app.config['S3_LOCATION'] = f"http://{os.environ.get('S3_BUCKET_NAME')}.s3.amazonaws.com/"
@@ -50,6 +56,19 @@ def create_app(test_config=None):
                           aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                           aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
         S3_BUCKET = os.environ.get('S3_BUCKET_NAME')
+        # try:
+        #     obj = s3.Object(Bucket=S3_BUCKET, Key='words.txt').load()
+        #     file_contents = obj.get()['Body'].read().decode('utf-8')
+        #     words = json.loads(file_contents)
+        # except ClientError as e:
+        #     print("words.txt doesn't exist, using new dict", flush=True)
+        # try:
+        #     obj = s3.Object(Bucket=S3_BUCKET, Key='synonyms.txt').load()
+        #     file_contents = obj.get()['Body'].read().decode('utf-8')
+        #     tags = json.loads(file_contents)
+        # except ClientError as e:
+        #     print("tags.txt doesn't exist, using new dict", flush=True)
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)

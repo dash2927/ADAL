@@ -41,3 +41,170 @@
   width: 90%;
 
 }
+
+.recipe-page {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.recipe {
+  margin: 3% 30% 3% 27%;
+}
+
+.recipe-img {
+  display: block;
+  position: relative;
+  margin-left: 5%;
+  margin-right: auto;
+  object-fit: cover;
+  height: 750px;
+  width: 33%;
+  transition: transform 0.25s ease;
+  transition: 1.0s ease;
+  transform-origin: 50% 100%;
+  z-index: 1;
+}
+
+.recipe-img:hover {
+    transform: scale(1.0);
+    width: 100%;
+    margin-left: 0;
+}
+
+
+@media (max-width: 60em) {
+    .recipe {
+        margin: 3% 5% 3% 5%;
+    }
+    .recipe-img {
+        margin-left: 5%;
+        width: 33%;
+    }
+}
+
+.tag-row {
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+  word-spacing: 0.6px;
+  color: black;
+  font-weight: 700;
+  font-style: normal;
+  font-variant: small-caps;
+  display: flex;
+}
+
+.tag-container {
+  color: red;
+  background-color: #FFD2D2;
+  margin: 4px;
+  padding: 0px 4px 0px 4px;
+  width: fit-content;
+  border-radius: 4px;
+}
+
+#tag-header {
+  color: gray;
+  background-color: white;
+  font-size: 16px;
+  padding-left: 0px;
+  margin-left: 0px
+}
+
+#recipe-title {
+  color: black;
+  font-variant: small-caps;
+}
+
+#recipe-desc {
+  font-size: 18px;
+  color: gray;
+}
+
+.author-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+#author-name {
+    color: gray;
+    font-variant: small-caps;
+    margin-left: 4px;
+}
+
+#author-stats, #upvote-stat{
+    font-size: 12px;
+    color: gray;
+    font-variant: small-caps;
+}
+
+.recipe-information {
+    position: relative;
+    z-index: auto;
+}
+
+.ingredient-container {
+    position: absolute;
+    top: 0;
+    margin-left: 35%;
+    padding-left: 10%;
+    padding-top: 5%;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    width: 65%;
+    display: block;
+    background: rgba(255, 0, 0, 0.1);
+    height: 750px;
+}
+
+.ingredient-container label {
+    position: relative;
+    color: gray;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.vote-container {
+    position: absolute;
+    left: 0;
+}
+
+.vote-container .post-upvote {
+    color: gray;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom:4px;
+    display:block
+}
+
+.vote {
+    display: inline-block;
+    cursor: pointer;
+    color: gray
+}
+
+.vote.on {
+    color: red;
+}
+
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.break-column {
+  flex-basis: 100%;
+  width: 0;
+
+.item {
+  flex-grow: 1;
+}
+
+.item-wide {
+  flex-grow: 2;
+}
