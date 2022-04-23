@@ -56,7 +56,7 @@
 .recipe-img {
   display: block;
   position: relative;
-  margin-left: 5%;
+  margin-left: 40px;
   margin-right: auto;
   object-fit: cover;
   height: 750px;
@@ -79,9 +79,9 @@
         margin: 3% 5% 3% 5%;
     }
     .recipe-img {
-        margin-left: 5%;
         width: 33%;
     }
+
 }
 
 .tag-row {
@@ -149,12 +149,12 @@
 .ingredient-container {
     position: absolute;
     top: 0;
-    margin-left: 35%;
+    margin-left: calc(40px + 33%);
     padding-left: 10%;
     padding-top: 5%;
     overflow: hidden;
     overflow-wrap: break-word;
-    width: 65%;
+    width: calc(67% - 40px);
     display: block;
     background: rgba(255, 0, 0, 0.1);
     height: 750px;

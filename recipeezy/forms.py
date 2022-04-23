@@ -22,25 +22,12 @@ class MakeAcctForm(FlaskForm):
     # submit = SubmitField('Create Account')
 
 
-class IngredientForm(FlaskForm):
+class SearchForm(FlaskForm):
     '''
     Form for ingredient measurements
     '''
-    amount = IntegerField('Amount')
-    ing = StringField('Ingredient')
-
-
-class SubmitRecForm(FlaskForm):
-    '''
-    Form to Submit a Recipe
-    '''
-    title = StringField('Recipe Title', validators=[DataRequired()])
-    category = StringField('Category', validators=[DataRequired()])
-    image = FileField('Image File',
-                      validators=[Regexp(u'^.*(\.jpeg|\.png)')])
-    description = TextAreaField('Description', validators=[DataRequired()])
-    ingredients = FieldList(FormField(IngredientForm), min_entries=1)
-    steps = FieldList(TextAreaField('Steps', validators=[DataRequired()]), min_entries=1)
-    tags = FieldList(StringField('Tags', validators=[Optional()]), min_entries=0)
-    # submit = SubmitField('Submit')
+    style_query = {'class': 'form-control', 'style': "float: left; width: calc(100% - 100px);"}
+    style_button = {'class': 'btn btn-danger', 'value': 'Search'}
+    query = StringField('Query', render_kw=style_query)
+    submit = SubmitField('Search', render_kw=style_button)
 

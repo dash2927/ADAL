@@ -7,7 +7,6 @@ from sqlalchemy import exc
 from urllib.parse import urlparse, urljoin
 from werkzeug.utils import secure_filename
 from .database import User, Post, Vote, Tag
-from .forms import LoginForm, SubmitRecForm
 from . import login_manager, db, tags, words
 
 # from database import db
