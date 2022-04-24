@@ -131,6 +131,7 @@ a {
 
 #recipe-title {
   color: black;
+  margin-top: 0;
   font-variant: small-caps;
 }
 
@@ -160,6 +161,30 @@ a {
 .recipe-information {
     position: relative;
     z-index: auto;
+}
+
+.recipe-information #direction-container {
+    margin-top: 40px;
+}
+
+.recipe-information #direction-container #number {
+    transform: translateY(5px);
+    color: white;
+    font-weight: bold;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    display: inline-block;
+    margin-bottom:10px; 
+    padding:9px; 
+    background-color: #d7385e;
+    border-radius: 50%;
+}
+
+.recipe-information #direction-container #writing {
+    width: calc(100% - 59px);
+    margin-left: 8px;
+    overflow-wrap: break-word;
 }
 
 .ingredient-container {

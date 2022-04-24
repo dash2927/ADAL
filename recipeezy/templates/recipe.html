@@ -15,7 +15,7 @@
         {% endfor %}
         </div>
         {% endif %}
-        <h1 class="h1 mt-5 mb-0 fw-normal" id="recipe-title">{{post.name}}</h1>
+        <h1 class="h1 mt-0 mb-0 fw-normal" style='margin-top:0;' id="recipe-title">{{post.name}}</h1>
         <h5 class="h5 mb-3" style="color: gray; font-size:16px; font-variant: small-caps;">Created: {{post.created}}</h5>
         <h5 class="h5 mb-3 fw-normal" id="recipe-desc">{{post.data['description']}}</h5>
         <div class="author-container">
@@ -55,7 +55,17 @@
         <div class="break"></div>
         {% endfor %}
         </div>
+        <div id="direction-container">
+        {% for step in range(post.data['steps']|length) %}
+        <div style="display: flex; align-items: center;">
+            <span id="number">{{step+1}}</span>
+            <div id="writing" style='display: inline-block'>{{post.data['steps'][step]}}</div>
+        </div>
+        <div class="break"></div>
+        {% endfor %}
+        <h3 class="h3 mt-3" style="font-variant: small-caps">Directions</h3>
         {{post.data}}
+        </div>
         </div>
     </div>
 </main>
