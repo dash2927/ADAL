@@ -59,10 +59,19 @@ def search():
                                        Tag._tag.op('regexp')(rf'(?i){data}'),
                                        Post.name.op('regexp')(rf'(?i){data}')
                                    )).all()
-        print(postlst, flush=True)
-        return redirect(url_for('search_bp.recipe', recipe_id=postlst[0].id))
+        # delete this
+        postlst = Post.query.join(Tag,
+                                   Post.id==Tag.post_id).filter(
+                                       Tag._tag == "testsushi"
+                                   ).first()
+        ###
+        # print(postlst, flush=True)
+        return render_template('search.html', form=form, user=current_user,
+                               postlst=postlst, posti=postlst, ca=ca)
+        # return redirect(url_for('search_bp.recipe', recipe_id=postlst[0].id))
         #return render_template('search.html', user=current_user,
         #                       posti=postlst[0], postlst=postlst)
+        return recipe(postlst[0].id)
     # post = Post.query.filter_by(name="Baked Cod Burgers").first()
     # print(post.name)
     # return render_template('search_bp.recipe', post=post, name=post.name)
@@ -85,6 +94,11 @@ def recipe(recipe_id):
     upvote = "null"
     if vote is not None:
         upvote = str(vote.upvote).lower()
+    if ca.config['FLASK_ENV'] == 'development':
+        filename = url_for('static', filename = post.filename)
+    else:
+        filename = post.filename
     print(f'{post.name}, {author.uname}, {current_user.uname}, {upvote}', flush=True)
     return render_template('recipe.html', name=post.name,
-                           post=post, author=author, upvote=upvote)
+                           post=post, author=author, upvote=upvote,
+                           filename=filename)

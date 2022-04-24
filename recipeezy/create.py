@@ -27,8 +27,9 @@ def save_image(file):
         try:
             file.save(os.path.join(ca.config['UPLOAD_FOLDER'], file.filename))
         except Exception as e:
+            print(e, flush=True)
             return -1
-        return f"{os.path.join('static/images', file.filename)}"
+        return f"{os.path.join('images', file.filename)}"
     else:
         s3 = boto3.client('s3',
                           aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
@@ -74,14 +75,15 @@ def create():
                             "." + file.filename[1]
             file.filename = secure_filename(file.filename)
             output = save_image(file)
+            file.filename=output
             if output == -1:
                 return {'status': -1, 'message': 'Error when uploading file'}
         try:
             print("***********OUTPUT: ", flush=True, end='')
             print(output, flush=True)
             post = Post(current_user.id, data, output)
-            db.session.commit()
             db.session.add(post)
+            db.session.commit()
             print(f"*********Post ID: {post.id}")
             print(f"*********Current_User ID: {current_user.id}")
             vote = Vote(user_id=current_user.id, post_id=post.id) # ensure user cant upvote own post
