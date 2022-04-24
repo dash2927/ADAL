@@ -11,7 +11,7 @@ homebp = Blueprint('home_bp', __name__)
 def home():
     print("Switched to home", flush=True)
     # print(f'user: {current_user.uname}', flush=True)
-    postlst = list(Post.query.filter(Post.name.op('regexp')(rf'(?i).*'))
+    postlst = list(Post.query.filter(Post.name.op('regexp')(rf'(?i).'))
                    .order_by(Post.upvotes.desc()).all())
     print(f'************{postlst}', flush=True)
     return render_template('home.html', user=current_user, postlst=postlst,
