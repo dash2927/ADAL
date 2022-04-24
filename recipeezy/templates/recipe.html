@@ -26,6 +26,7 @@
         </div>
         <hr style="color: gray">
         <div class="recipe-information">
+        {% if user.is_authenticated %}
         <div class="vote-container">
             <span class="vote" id="upvote">
             <svg width="34" height="34">
@@ -41,6 +42,7 @@
             </svg>
             </span>
         </div>
+        {% endif %}
         <img class="recipe-img"
             src={{ filename }} width=50%>
         <div class="ingredient-container">
