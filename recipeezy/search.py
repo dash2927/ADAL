@@ -20,6 +20,11 @@ searchbp = Blueprint('search_bp',
                      template_folder='templates',
                      static_folder='static')
 
+if ca.config['FLASK_ENV'] == 'development':
+    regex = 'regexp'
+else:
+    regex = '~'
+
 
 @searchbp.route('/search/', methods=('GET', 'POST'))
 @searchbp.route('/search/<searchterm>', methods=('GET', 'POST'))
@@ -40,8 +45,8 @@ def search(searchterm='.'):
     if searchterm is not '':
         postlst = list(Post.query.join(Tag,
                                    Post.id==Tag.post_id).filter(or_(
-                                       Tag._tag.op('regexp')(rf'(?i){searchterm}'),
-                                       Post.name.op('regexp')(rf'(?i){searchterm}')
+                                       Tag._tag.op(regex)(rf'(?i){searchterm}'),
+                                       Post.name.op(regex)(rf'(?i){searchterm}')
                                    )).order_by(Post.upvotes.desc()).all())
         postlst = postlst[:min(20, len(postlst))]
         print("TESTING FOR REDIRECT", flush=True)
