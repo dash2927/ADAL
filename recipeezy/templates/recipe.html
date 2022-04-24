@@ -10,7 +10,8 @@
         Tags For: 
         </div>
         {% for tag in post.data['tags'] %}
-        <div class="tag-container">{{tag}}</div>
+        <a href={{ url_for('search_bp.search', searchterm=tag) }}
+            class="tag-container" id="tag-button">{{tag}}</a>
         {% endfor %}
         </div>
         {% endif %}

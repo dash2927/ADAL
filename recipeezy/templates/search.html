@@ -15,16 +15,46 @@
         Search for a recipe
       </div>
     </div>
-    <div class="col-12">
+    <div class="grid-container">
     <!-- get every recipe in postlst field -->
+    {% if postlst %}
+    {% for posti in postlst %}
     <div class="recipe-container">
+        <a id="recipe-redirect" href={{ url_for('search_bp.recipe', recipe_id=posti.id) }}>
         {% if ca.config['FLASK_ENV'] == 'development' %}
         <img src={{ url_for('static', filename = posti.filename) }} id="recipe-img">
         {% else %}
         <img src=posti.filename id="recipe-img">
         {% endif %}
-        <div id='description'></div>
+        <div id='description'>
+            <div class='container' style='position: relative'>
+                <div class='row'>
+                    <span style='width: 100%; height: 80px; overflow: hidden; text-overflow: ellipsis; display: inline-block;'>
+                        {{posti.name}}
+                    </span>
+                </div>
+                <div class="tag-container" id='tag-header'
+                    style='background-color:transparent; width: fit-contents;
+                    position: relative; display: inline-block;'>
+                    {% for n in range(3) %}
+                    <div href={{ url_for('search_bp.search', searchterm=posti.data['tags'][n]) }} class="tag-container" id="tag">
+                        {{posti.data['tags'][n]}}</div>
+                    {% endfor %}
+                </div>
+                    <span style="font-size: 10px; position:relative; top:12px;
+                        font-weight: bold; display: inline-block; width:
+                        fit-content; color:white; float:right;">{{ posti.upvotes }}
+                    </span>
+                <div id='passage'>
+                    <span style='font-variant: small-caps; font-weight: bold;'>DESCRIPTION: </span>
+                    {{ posti.data['description'] }}
+                </div>
+            </div>
+        </div>
+        </a>
     </div>
+    {% endfor %}
+    {% endif %}
     <!---->
     </div>
   </form>

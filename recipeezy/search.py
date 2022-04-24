@@ -41,37 +41,51 @@ def load_file(key):
         return image
 '''
 
-@searchbp.route('/search', methods=('GET', 'POST'))
+@searchbp.route('/search/', methods=('GET', 'POST'))
+@searchbp.route('/search/<searchterm>', methods=('GET', 'POST'))
 @login_required
-def search():
+def search(searchterm='.'):
+    print(f'****Test{searchterm}', flush=True)
     postlst=None
     form = SearchForm()
-    # if form.validate_on_submit():
+    print("SEARCH PAGE VISIT", flush=True)
     if request.method == 'POST':
     #if request.method == 'POST':
         print(request.form)
         print(request)
-        print('****Test', flush=True)
         data = request.form['query']
+        print(f'****Test{data}', flush=True)
+        return redirect(url_for('search_bp.search', searchterm=data))
         print(data.encode('unicode_escape'), flush=True)
-        postlst = Post.query.join(Tag,
+        postlst = list(Post.query.join(Tag,
                                    Post.id==Tag.post_id).filter(or_(
                                        Tag._tag.op('regexp')(rf'(?i){data}'),
                                        Post.name.op('regexp')(rf'(?i){data}')
-                                   )).all()
+                                   )).all())
         # delete this
-        postlst = Post.query.join(Tag,
-                                   Post.id==Tag.post_id).filter(
-                                       Tag._tag == "testsushi"
-                                   ).first()
+        #postlst = [Post.query.join(Tag,
+        #                           Post.id==Tag.post_id).filter(
+        #                               Tag._tag == "testsushi"
+        #                           ).first()]
         ###
+        postlst = postlst[:min(20, len(postlst))]
         # print(postlst, flush=True)
         return render_template('search.html', form=form, user=current_user,
-                               postlst=postlst, posti=postlst, ca=ca)
+                               postlst=postlst, ca=ca)
         # return redirect(url_for('search_bp.recipe', recipe_id=postlst[0].id))
         #return render_template('search.html', user=current_user,
         #                       posti=postlst[0], postlst=postlst)
         return recipe(postlst[0].id)
+    if searchterm is not '':
+        postlst = list(Post.query.join(Tag,
+                                   Post.id==Tag.post_id).filter(or_(
+                                       Tag._tag.op('regexp')(rf'(?i){searchterm}'),
+                                       Post.name.op('regexp')(rf'(?i){searchterm}')
+                                   )).all())
+        postlst = postlst[:min(20, len(postlst))]
+        print("TESTING FOR REDIRECT", flush=True)
+        return render_template('search.html', form=form, user=current_user,
+                               postlst=postlst, ca=ca)
     # post = Post.query.filter_by(name="Baked Cod Burgers").first()
     # print(post.name)
     # return render_template('search_bp.recipe', post=post, name=post.name)

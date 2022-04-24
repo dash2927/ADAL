@@ -25,7 +25,7 @@
                 <a class="nav-link active" aria-current="page" href="{{ url_for('home_bp.home') }}">Home</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('search_bp.search')}}">Search</a>
+                  <a class="nav-link" href="{{ url_for('search_bp.search', recipe_id='')}}">Search</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('create_bp.create') }}">Create</a>
