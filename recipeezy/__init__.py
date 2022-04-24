@@ -1,19 +1,32 @@
+# Import necessary libraries, including:
+# Flask for web app framework, SQLAlchemy as python sql wrapper
 import os, json, boto3, botocore
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, logout_user
-# from fast_autocomplete.misc import read_csv_gen
 from sqlalchemy.exc import OperationalError
 from botocore.errorfactory import ClientError
 
+# Initialize SQLAlchemy instance for db creation
 db = SQLAlchemy()
+
+# Dictionaries to hold post words and tags
 words = {}
 tags = {}
+
+# Initialize flask LoginManager instance to handle login
 login_manager = LoginManager()
 login_manager.setup_app = "strong"
 
 
 def create_app(test_config=None):
+    """
+    Create and configure the application depending on enviroment settings
+    Arguments:
+        test_config: any configurations necessary for testing, such as debug level
+    Returns:
+        Initialized flask app
+    """
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     # Choose environment (change to production when using heroku):
@@ -48,7 +61,6 @@ def create_app(test_config=None):
         #                                "static/tags.txt")):
         #     with open(os.path.join(app.instance_path, "static/synonyms.txt"), 'r') as f:
         #         words = json.load(f)
-
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ktorfzoozadwle:95f08adfeb8e558d62c7ab82a977ff9a135e7f03f931dcf77f752df1ff31fcf6@ec2-54-157-79-121.compute-1.amazonaws.com:5432/d8v8dimv7h3a6o'
         app.config['S3_LOCATION'] = f"http://{os.environ.get('S3_BUCKET_NAME')}.s3.amazonaws.com/"
@@ -90,6 +102,13 @@ def create_app(test_config=None):
     # function to create all tables before request
     @app.before_first_request
     def create_tables():
+        """
+        Create all of the db tables
+        Arguments:
+            None
+        Returns:
+            Locally initialized db, errors if applicable
+        """
         try:
             db.create_all()
         except OperationalError as e:
