@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 import re, boto3, os, hashlib, json
 
-# User db schema definition and necessary functions, taking a user mixin and db model object
+# User db schema definition and necessary functions, extending on user mixin and db model object
 class User(UserMixin, db.Model):
 
     # Set tablename parameter as user
@@ -73,7 +73,7 @@ class User(UserMixin, db.Model):
     def verify_pwd(self, pwd):
         return check_password_hash(self._pwdhash, pwd)
 
-# Post db schema definition and necessary functions, taking a db model object
+# Post db schema definition and necessary functions, extending on db model object
 class Post(db.Model):
 
     # Set the tablename parameter as post
@@ -156,7 +156,7 @@ class Post(db.Model):
         self._filename = image_filename
 
 
-# Vote db schema definition, taking a db model object
+# Vote db schema definition, extending on db model object
 class Vote(db.Model):
 
     # Set the tablename parameter as vote
@@ -175,7 +175,7 @@ class Vote(db.Model):
                                                       uselist=False))
     upvote = db.Column(db.Boolean, default=True, unique=False, nullable=False)
 
-# Tag db schema definition, taking a db model object
+# Tag db schema definition, extending on db model object
 class Tag(db.Model):
 
     # Set the tablename parameter as tag
