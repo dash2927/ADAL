@@ -1,6 +1,6 @@
 # Recipeezy Source Documentation
 
-## __init__.py
+## \_\_init\_\_.py
 
 ## create.py
 
