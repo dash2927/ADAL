@@ -16,7 +16,7 @@
         {% if ca.config['FLASK_ENV'] == 'development' %}
         <img src={{ url_for('static', filename = posti.filename) }} id="recipe-img">
         {% else %}
-        <img src=posti.filename id="recipe-img">
+        <img src={{posti.filename}} id="recipe-img">
         {% endif %}
         <div id='description'>
             <div class='container' style='position: relative'>

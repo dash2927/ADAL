@@ -84,6 +84,13 @@
 
 }
 
+@media (min-width: 1200px) {
+  .container{
+      max-width: 970px;
+  }
+}
+
+
 .tag-row {
   font-family: "Arial Black", Gadget, sans-serif;
   font-size: 16px;

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Import pytest framework, database
+=======
+
+>>>>>>> 04b911e4177ff4df61aed6a32f62336cea2a1ec0
 import pytest
 from recipeezy.database import db
 

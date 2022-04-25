@@ -1,7 +1,6 @@
 # Import Flask components and SqlAlchemy
 # Import libs for working with json, handling parsing and validations
 # Import forms and db definitions
-from crypt import methods
 import os, json, time, boto3, botocore
 from io import BytesIO
 from PIL import Image
@@ -22,6 +21,12 @@ searchbp = Blueprint('search_bp',
                     #  url_prefix='/',
                      template_folder='templates',
                      static_folder='static')
+
+if ca.config['FLASK_ENV'] == 'development':
+    regex = 'regexp'
+else:
+    regex = '~'
+
 
 # Routing for search page with appended search terms taking GET and POST request types
 @searchbp.route('/search/', methods=('GET', 'POST'))
@@ -60,8 +65,8 @@ def search(searchterm='.'):
         # Build list of posts based on query result using search terms
         postlst = list(Post.query.join(Tag,
                                    Post.id==Tag.post_id).filter(or_(
-                                       Tag._tag.op('regexp')(rf'(?i){searchterm}'),
-                                       Post.name.op('regexp')(rf'(?i){searchterm}')
+                                       Tag._tag.op(regex)(rf'(?i){searchterm}'),
+                                       Post.name.op(regex)(rf'(?i){searchterm}')
                                    )).order_by(Post.upvotes.desc()).all())
         # Get at most 20 posts matching search terms
         postlst = postlst[:min(20, len(postlst))]
@@ -95,6 +100,7 @@ def recipe(recipe_id):
                                 post_id=post.id).first()
     else:
         vote = None
+    # Otherwise, no upvote data available
     upvote = "null"
     # Cast vote count to string
     if vote is not None:
