@@ -121,7 +121,9 @@ def create():
             if output == -1:
                 return {'status': -1, 'message': 'Error when uploading file'}
 
-        # Once form has been validated, save all elements to the dbs
+        # Return error if image is not passed
+        else:
+            return {'status': -1, 'message': 'Please attach an image'}
         try:
             print("***********OUTPUT: ", flush=True, end='')
             print(output, flush=True)
