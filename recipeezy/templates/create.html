@@ -133,6 +133,7 @@
               window.scrollTo(0,0)
             } else {
               console.log(response.data.message)
+              window.location.href = window.location.origin;
             }
           })
           .catch(error => {
