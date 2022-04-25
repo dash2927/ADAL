@@ -78,6 +78,8 @@ def create():
             file.filename=output
             if output == -1:
                 return {'status': -1, 'message': 'Error when uploading file'}
+        else:
+            return {'status': -1, 'message': 'Please attach an image'}
         try:
             print("***********OUTPUT: ", flush=True, end='')
             print(output, flush=True)
