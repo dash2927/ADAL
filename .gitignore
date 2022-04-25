@@ -180,3 +180,6 @@ yarn-error.log*
 
 # Ignoring the generated instance for Flask
 /instance
+
+# Ignore recipeezy db
+.recipeezy

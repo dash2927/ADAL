@@ -129,6 +129,29 @@ class Vote(db.Model):
                                                       uselist=False))
     upvote = db.Column(db.Boolean, default=True, unique=False, nullable=False)
 
+    # @property
+    # def post_id(self):
+    #     return self.post_id
+
+    # @post_id.setter
+    # def post_id(self, upvote_post_id):
+    #     self.post_id = upvote_post_id
+
+    # @property
+    # def user_id(self):
+    #     return self.user_id
+
+    # @user_id.setter
+    # def user_id(self, upvote_user_id):
+    #     self.user_id = upvote_user_id
+
+    # @property
+    # def upvote(self):
+    #     return self.upvote
+
+    # @upvote.setter
+    # def upvote(self, upvote_post):
+    #     self.upvote = upvote_post
 
 class Tag(db.Model):
     '''

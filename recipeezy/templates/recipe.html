@@ -30,7 +30,11 @@
         <div class="vote-container">
             <span class="vote" id="upvote">
             <svg width="34" height="34">
+                {% for recipe_id in post.data['id'] %}
+                <a href={{ url_for('search_bp.upvote', recipe_id=recipe_id) }}>
+            {% endfor %}
                 <path d="M 2 18h32L18 2L 18z" fill="currentColor"></path>
+                </a>
             </svg>
             </span>
             <div class="break"></div>

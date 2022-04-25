@@ -1,5 +1,5 @@
+# Import pytest framework, database
 import pytest
-
 from recipeezy.database import db
 
 # Test for getting default page from base directory
