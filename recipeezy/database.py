@@ -35,7 +35,7 @@ class User(UserMixin, db.Model):
         self.uname = name
         self.password = pword
 
-    # Return the current username 
+    # Return the current username
     @property
     def username(self):
         return self.uname
@@ -79,7 +79,7 @@ class Post(db.Model):
     # Set the tablename parameter as post
     __tablename__ = "postinfo"
 
-    # Define all necessary table columns 
+    # Define all necessary table columns
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     _filename = db.Column(db.String(128), nullable=False)
@@ -109,8 +109,8 @@ class Post(db.Model):
             filename: name of the image file to be uploaded
         Returns:
             None
-        """        
-        
+        """
+
         # Set the post object author anddata
         self.author_id = author_id
         self.data = data
