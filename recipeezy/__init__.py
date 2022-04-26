@@ -1,21 +1,37 @@
-import os
+# Import necessary libraries, including:
+# Flask for web app framework, SQLAlchemy as python sql wrapper
+import os, json, boto3, botocore
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, logout_user
 from sqlalchemy.exc import OperationalError
+from botocore.errorfactory import ClientError
 
-
+# Initialize SQLAlchemy instance for db creation
 db = SQLAlchemy()
+
+# Dictionaries to hold post words and tags
+words = {}
+tags = {}
+
+# Initialize flask LoginManager instance to handle login
 login_manager = LoginManager()
 login_manager.setup_app = "strong"
 
 
 def create_app(test_config=None):
+    """
+    Create and configure the application depending on enviroment settings
+    Arguments:
+        test_config: any configurations necessary for testing, such as debug level
+    Returns:
+        Initialized flask app
+    """
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     # Choose environment (change to production when using heroku):
-    ENV = 'development'
-    # ENV = 'production'
+    # ENV = 'development'
+    ENV = 'production'
     # Add configuration options:
     app.config.from_mapping(
         # Main options
@@ -37,9 +53,34 @@ def create_app(test_config=None):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.recipeezy'
         app.config['DATABASE'] = os.path.join(app.instance_path,
                                               'recipeezy.sqlite')
+        # if os.path.exists(os.path.join(app.instance_path,
+        #                                "static/words.txt")):
+        #     with open(os.path.join(app.instance_path, "static/words.txt"), 'r') as f:
+        #         words = json.load(f)
+        # if os.path.exists(os.path.join(app.instance_path,
+        #                                "static/tags.txt")):
+        #     with open(os.path.join(app.instance_path, "static/synonyms.txt"), 'r') as f:
+        #         words = json.load(f)
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ktorfzoozadwle:95f08adfeb8e558d62c7ab82a977ff9a135e7f03f931dcf77f752df1ff31fcf6@ec2-54-157-79-121.compute-1.amazonaws.com:5432/d8v8dimv7h3a6o'
         app.config['S3_LOCATION'] = f"http://{os.environ.get('S3_BUCKET_NAME')}.s3.amazonaws.com/"
+        s3 = boto3.client('s3',
+                          aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
+                          aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
+        S3_BUCKET = os.environ.get('S3_BUCKET_NAME')
+        # try:
+        #     obj = s3.Object(Bucket=S3_BUCKET, Key='words.txt').load()
+        #     file_contents = obj.get()['Body'].read().decode('utf-8')
+        #     words = json.loads(file_contents)
+        # except ClientError as e:
+        #     print("words.txt doesn't exist, using new dict", flush=True)
+        # try:
+        #     obj = s3.Object(Bucket=S3_BUCKET, Key='synonyms.txt').load()
+        #     file_contents = obj.get()['Body'].read().decode('utf-8')
+        #     tags = json.loads(file_contents)
+        # except ClientError as e:
+        #     print("tags.txt doesn't exist, using new dict", flush=True)
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
@@ -61,6 +102,13 @@ def create_app(test_config=None):
     # function to create all tables before request
     @app.before_first_request
     def create_tables():
+        """
+        Create all of the db tables
+        Arguments:
+            None
+        Returns:
+            Locally initialized db, errors if applicable
+        """
         try:
             db.create_all()
         except OperationalError as e:
@@ -71,9 +119,11 @@ def create_app(test_config=None):
         from . import home
         from . import login
         from . import create
+        from . import search
         app.register_blueprint(home.homebp)
         app.register_blueprint(login.loginbp)
         app.register_blueprint(create.createbp)
+        app.register_blueprint(search.searchbp)
 
         # Create Database Models
         create_tables()

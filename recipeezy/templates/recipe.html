@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="recipe_main">
+    <div class="container">
+        {% if post.data['tags']|length != 0 %}
+        <div class="tag-row">
+            <div class="tag-container" id='tag-header'>
+                Tags For:
+            </div>
+            {% for tag in post.data['tags'] %}
+            <a href={{ url_for('search_bp.search', searchterm=tag) }}
+                class="tag-container" id="tag-button">{{tag}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <h1 class="h1 mt-0 mb-0 fw-normal" style='margin-top:0;' id="recipe-title">{{post.name}}</h1>
+        <h5 class="h5 mb-3" style="color: gray; font-size:16px; font-variant: small-caps;">Created: {{post.created}}</h5>
+        <h5 class="h5 mb-3 fw-normal" id="recipe-desc">{{post.data['description']}}</h5>
+        <div class="author-container">
+            <h5 class="item">By: </h5>
+            <h5 class="h5 fw-normal" id="author-name">{{author.uname}}</h5>
+            <div class="break"></div>
+            <h5 class="h5" id="author-stats">Posts: {{author.posts}} | Upvotes:
+                <h4 class="h5" id="upvote-stat">{{author.upvotes}}</h4>
+            </h5>
+        </div>
+        <hr style="color: gray">
+        <div class="recipe-information">
+            <div class="row">
+                <div class="col-md-1">
+                    {% if user.is_authenticated %}
+                    <div class="vote-container">
+                        <span class="vote" id="upvote">
+                            <svg width="34" height="34">
+                                <path d="M 2 18h32L18 2L 18z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        <div class="break"></div>
+                        <h5 class="post-upvote" id="post-upvote">{{post.upvotes}}</h5>
+                        <div class="break"></div>
+                        <span class="vote" id="downvote">
+                            <svg width="34" height="34">
+                                <path d="M2 10h32L18 26 2 10z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <img class="img-fluid"
+                        src={{ filename }}>
+                </div>
+                <div class="col-md-5">
+                    <h3 style="font-variant: small-caps">Ingredients</h3>
+                    <ul class="list-group">
+                    {% for step in post.data['ingredients'] %}
+                        <li class="list-group-item">{{step['quantity']}} {{step['name']}}</li>
+                        
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div id="direction-container">
+                <h3 class="h3 mt-3" style="font-variant: small-caps">Directions</h3>
+                {% for step in range(post.data['steps']|length) %}
+                <div style="display: flex; align-items: center;">
+                    <span id="number">{{step+1}}</span>
+                    <div id="writing" style='display: inline-block'>{{post.data['steps'][step]}}</div>
+                </div>
+                <div class="break"></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<body onLoad="checkUpvote()"></body>
+<script type="text/javascript">
+    var upvote = {{ upvote }};
+
+    function checkUpvote() {
+        if (upvote == null) {
+            return
+        }
+        if (upvote == true) {
+            var vote = document.getElementById("upvote");
+        } else {
+            var vote = document.getElementById("downvote");
+        }
+        vote.classList.toggle('on')
+    };
+
+    for (const btn of document.querySelectorAll('.vote')) {
+        btn.addEventListener('click', event => {
+            var curr = event.currentTarget;
+            var inca = Number(document.getElementById("upvote-stat").innerHTML);
+            var incp = Number(document.getElementById("post-upvote").innerHTML);
+            var mult = 1;
+            var upvote_type = "upvote";
+            if (btn.getAttribute("id") == "upvote") {
+                var other = document.getElementById("downvote");
+            } else {
+                upvote_type = "downvote";
+                var other = document.getElementById("upvote");
+                mult = -1;
+            }
+            // if current is off and the other is on, switch them
+            if (!curr.classList.contains("on") && other.classList.contains("on")) {
+                other.classList.toggle('on');
+                inca += mult;
+                incp += mult;
+            } 
+            // if current is on and the other is off, turn off
+            else if (curr.classList.contains("on") && !other.classList.contains("on")) {
+                upvote_type = "none";
+                inca -= 2 * mult;
+                incp -= 2 * mult;
+            }
+            event.currentTarget.classList.toggle('on');
+            inca += mult;
+            incp += mult;
+            document.getElementById("upvote-stat").innerHTML = inca;
+            document.getElementById("post-upvote").innerHTML = incp;
+            upvote_type = upvote_type + '_' + inca + '_' + incp;
+            // Send a post to url using XML
+            var xhr = new XMLHttpRequest();
+            var url = "/recipe/" + {{post.id}} + '/' + upvote_type;
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+/*
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log('success')
+                }
+            };
+*/
+            var data = JSON.stringify({"htmlstr": upvote_type});
+            xhr.send(data);
+        });
+    }
+</script>
+{% endblock %}
