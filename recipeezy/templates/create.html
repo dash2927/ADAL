@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<script src="https://unpkg.com/vue@3"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{{ url_for('static', filename='js/vue.global.js') }}"></script>
+<script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
 
 <div id="app">
   <form class="row g-3 form-create text-danger">
@@ -44,7 +44,7 @@
     <div class="col-md-11" v-for="(ingredient, i) in submitData.ingredients" :key="i">
       <div class="row">
         <div class="col-md-2">
-          <input v-model="submitData.ingredients[i].quantity" type="number" class="form-control">
+          <input v-model="submitData.ingredients[i].quantity" class="form-control">
         </div>
         <div class="col-md-10">
           <div class="input-group">
@@ -74,7 +74,7 @@
     <h4>Tags</h4>
     <div class="col-md-11" v-for="(tag, i) in submitData.tags" :key="i">
       <div class="input-group">
-        <input v-model="submitData.tags[i]" type="text" class="form-control recipeTags">
+        <input v-model="submitData.tags[i]" type="text" maxlength="10" class="form-control recipeTags">
         <div class="input-group-append">
           <button class="btn " type="button" @click="removeTag(i)">x</button>
         </div>
