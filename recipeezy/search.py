@@ -30,9 +30,6 @@ else:
 def changevote(recipe_id, action):
     post = Post.query.filter_by(id = recipe_id).first()
     user = User.query.filter_by(id = post.author_id).first()
-    print("Found post / User ID: ")
-    print(f"**********Before: Post_upvote = {post.upvotes} | User_upvote={user.upvotes}", flush = True)
-    print(f"ACTION: {action}", flush=True)
     action_arr = action.split('_') # action will be in form {vote_type}_{inc_a}_{inc_p}
     vote_type = action_arr[0] # will be either upvote, downvote, or none
     inc_a = int(action_arr[1]) # new value of author upvotes
@@ -49,7 +46,6 @@ def changevote(recipe_id, action):
             print(f"Error in vote deletion. Rolling back db: {e}", flush=True)
             db.session.flush()
             db.session.rollback()
-        print(f"**********After: Post_upvote = {post.upvotes} | User_upvote={user.upvotes}", flush = True)
         return
     # since vote_type is not none, we can check upvote or downvote
     vote_type = vote_type == "upvote"
@@ -69,7 +65,6 @@ def changevote(recipe_id, action):
         print(f"Error when changing current Vote entry. Rolling back db: {e}", flush=True)
         db.session.flush()
         db.session.rollback()
-    print(f"**********After: Post_upvote = {post.upvotes} | User_upvote={user.upvotes}", flush = True)
     return
 
 # Routing for search page with appended search terms taking GET and POST request types
@@ -84,23 +79,15 @@ def search(searchterm='.'):
     Returns:
         Rendered search page
     """
-
-    print(f'****Test{searchterm}', flush=True)
-
     # Initialize post list result to none
     postlst=None
     # Create new instance of the search form
     form = SearchForm()
-    print("SEARCH PAGE VISIT", flush=True)
-
     # Handle POST requests on the search endpoint
     if request.method == 'POST':
     #if request.method == 'POST':
-        print(request.form)
-        print(request)
         # Get the request data from the submitted form
         data = request.form['query']
-        print(f'****Test{data}', flush=True)
         # Redirect the user to the search endpoint based on passed search terms
         return redirect(url_for('search_bp.search', searchterm=data))
         return recipe(postlst[0].id)
@@ -114,7 +101,6 @@ def search(searchterm='.'):
                                    )).order_by(Post.upvotes.desc()).all())
         # Get at most 20 posts matching search terms
         postlst = postlst[:min(20, len(postlst))]
-        print("TESTING FOR REDIRECT", flush=True)
         # Render the search page with the posts matching the search term request
         return render_template('search.html', form=form, user=current_user,
                                postlst=postlst, ca=ca)
@@ -132,17 +118,12 @@ def recipe(recipe_id, action=None):
     Returns:
         Rendered recipe page for unique recipe
     """
-
     # Get post by performing query on Post db by recipe_id
     if request.method == "POST":
-        print(f'****************GOT POST: {request.json["htmlstr"]}')
         changevote(recipe_id=recipe_id, action=request.json["htmlstr"])
-
     post = Post.query.filter_by(id = recipe_id).first()
-    print(f"**************{post.filename}", flush=True)
     # Get the post author by perfoming query on User db by post's author id
     author = User.query.filter_by(id = post.author_id).first()
-    print(f'*************{current_user.is_authenticated}')
     # Get the nuber of votes by performing query on Vote db based on user id and post id
     if current_user.is_authenticated:
         vote = Vote.query.filter_by(user_id=current_user.id,
@@ -160,7 +141,6 @@ def recipe(recipe_id, action=None):
     # Otherwise, pull filename from user input
     else:
         filename = post.filename
-
     # Render the recipe page with the authenticated user, and recipe details such as name, post, number of upvotes...
     return render_template('recipe.html', user=current_user, name=post.name,
                            post=post, author=author, upvote=upvote,
