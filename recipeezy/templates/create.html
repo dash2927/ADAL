@@ -90,7 +90,7 @@
 </div>
 
 <script>
-  const axios = require('axios');
+  // const axios = require('axios');
   Vue.createApp({
     delimiters: ['${', '}'],
     data() {
@@ -124,7 +124,6 @@
           headers: {
             'accept': 'application/json',
             'Content-Type': 'multipart/form-data',
-            'User-Agent' : 'axios 0.21.1'
           }
         })
           .then(response => {
