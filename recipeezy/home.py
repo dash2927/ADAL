@@ -6,8 +6,10 @@ from flask import current_app as ca
 from .database import Post
 from werkzeug.exceptions import abort
 
+
 # Create a new blueprint instance for the homepage
 homebp = Blueprint('home_bp', __name__)
+
 
 if ca.config['FLASK_ENV'] == 'development':
     regex = 'regexp'
@@ -27,11 +29,9 @@ def home():
         Rendered home page
     """
 
-    print("Switched to home", flush=True)
     # Get the top posts by upvote currently on the Post db
     postlst = list(Post.query.filter(Post.name.op(regex)(rf'(?i).'))
                    .order_by(Post.upvotes.desc()).all())
-    print(f'************{postlst}', flush=True)
     # Render the final homepage with the current user and top posts
     return render_template('home.html', user=current_user, postlst=postlst,
                            ca=ca)
