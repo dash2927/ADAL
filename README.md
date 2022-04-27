@@ -34,6 +34,22 @@ Recipeezy is a website which will collect and organize recipes from around the w
 ## Motivation
 At some point we've all experienced searching for that perfect recipe. Even if you do find 'the one', it usually comes after a wall of text wherein the author explains how this recipie was their great-grandmother's-aunt's-brother's favorite meal after a hard day on the farm. Our team wishes to simplify the recipe discovery process by delivering an experience built around the aspiring home chef. The motivation behind this project is our desire to make a system where our friends and family can share recipes with each other. We think that it will be engaging and useful to include a rating system for each recipe in a similar manner to the popular social website, Reddit.com. 
 
+## To Run
+
+**To run recipeezy locally:** 
+
+1. Fork/clone the github repo. 
+2. Create a new virtual environment
+3. `pip install -r requirements.txt`
+4. `python wsgi.py`
+5. Go to local host listed on console
+
+Alternatively, you can visit http://recip-eezy.herokuapp.com/ to see/use the public app.
+
+# Other information about this project:
+
+This project was created for the CU Boulder Post-Baccaleureate degree program for Applied Computer Science. The following categories detail our development process:
+
 ## Risks
 
 * **New language** - We will be working with javascript which not everyone in our group has worked with yet. This produces two challenges. One is that some people might not be able to do certain tasks. Another is that our team might have an uneven level of experience, possibly making it so certain team members have to do more work to complete a project feature.
