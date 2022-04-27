@@ -1,7 +1,7 @@
 # Import Flask components and SqlAlchemy
 # Import libs for working with json, handling parsing and validations
 # Import forms and db definitions
-from flask import redirect, session, render_template, request, url_for
+from flask import Blueprint, redirect, session, render_template, request, url_for
 from flask import current_app as ca
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_required
