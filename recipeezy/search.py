@@ -1,19 +1,15 @@
 # Import Flask components and SqlAlchemy
 # Import libs for working with json, handling parsing and validations
 # Import forms and db definitions
-import os, json, time, boto3, botocore
-from io import BytesIO
-from PIL import Image
-from flask import Blueprint, abort, flash, redirect, session, render_template, request, url_for
+from flask import redirect, session, render_template, request, url_for
 from flask import current_app as ca
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import login_user, logout_user, current_user, login_required
-from sqlalchemy import exc, or_, and_
-from urllib.parse import urlparse, urljoin
-from werkzeug.utils import secure_filename
+from flask_login import current_user, login_required
+from sqlalchemy import or_
 from .database import Tag, User, Post, Vote
 from .forms import SearchForm
-from . import login_manager, db
+from . import db
+
 
 # Create a new blueprint instance for the search page
 searchbp = Blueprint('search_bp',
@@ -22,10 +18,12 @@ searchbp = Blueprint('search_bp',
                      template_folder='templates',
                      static_folder='static')
 
+
 if ca.config['FLASK_ENV'] == 'development':
     regex = 'regexp'
 else:
     regex = '~'
+
 
 def changevote(recipe_id, action):
     post = Post.query.filter_by(id = recipe_id).first()
@@ -67,6 +65,7 @@ def changevote(recipe_id, action):
         db.session.rollback()
     return
 
+
 # Routing for search page with appended search terms taking GET and POST request types
 @searchbp.route('/search/', methods=('GET', 'POST'))
 @searchbp.route('/search/<searchterm>', methods=('GET', 'POST'))
@@ -106,6 +105,7 @@ def search(searchterm='.'):
                                postlst=postlst, ca=ca)
     # On default render the basic search page
     return render_template('search.html', form=form, user=current_user, postlst=postlst)
+
 
 # Routing for recipe page based on recipe id
 @searchbp.route('/recipe/<recipe_id>', methods=["POST", "GET"])
