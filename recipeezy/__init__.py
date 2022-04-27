@@ -36,7 +36,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         # Main options
         FLASK_APP='home.py',
-        SECRET_KEY=os.urandom(24),
+        SECRET_KEY='dev',# os.urandom(24),
         FLASK_ENV=ENV,
         DEBUG=True,
         # SQL options
