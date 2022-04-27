@@ -71,7 +71,7 @@ def save_image(file):
             )
         # Throw exception on save fail
         except Exception as e:
-            print("AWS upload error: ", e)
+            print(f"AWS upload error: {e}", flush=True)
             return -1
         # Return app path for S3 and the filename
         return f"{ca.config['S3_LOCATION']}{file.filename}"
