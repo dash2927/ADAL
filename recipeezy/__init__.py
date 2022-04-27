@@ -38,9 +38,9 @@ def create_app(test_config=None):
         FLASK_APP='home.py',
         SECRET_KEY=os.urandom(24),
         FLASK_ENV=ENV,
-        DEBUG=False,
+        DEBUG=True,
         # SQL options
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        SQLALCHEMY_TRACK_MODIFICATIONS=True,
         SQLALCHEMY_ECHO=False,  # log statements issued to stderr
         # Folder options
         STATIC_FOLDER="static",
