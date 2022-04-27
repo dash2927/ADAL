@@ -31,7 +31,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     # Choose environment (change to production when using heroku):
     ENV = 'development'
-    #ENV = 'production'
+    # ENV = 'production'
     # Add configuration options:
     app.config.from_mapping(
         # Main options

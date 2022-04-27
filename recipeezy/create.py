@@ -120,21 +120,16 @@ def create():
             # Handle any file upload errors after save
             if output == -1:
                 return {'status': -1, 'message': 'Error when uploading file'}
-
         # Return error if image is not passed
         else:
             return {'status': -1, 'message': 'Please attach an image'}
         try:
-            print("***********OUTPUT: ", flush=True, end='')
-            print(output, flush=True)
             # Create Post entity with necessary fields
             post = Post(current_user.id, data, output)
             # Save post entity to db
             db.session.add(post)
             db.session.commit()
             # Print statements for debugging
-            print(f"*********Post ID: {post.id}")
-            print(f"*********Current_User ID: {current_user.id}")
             # Create Vote entity with necessary fields
             vote = Vote(user_id=current_user.id, post_id=post.id)
             # Get each tag from the parsed data and save to the db
