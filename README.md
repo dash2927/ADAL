@@ -1,5 +1,13 @@
 # Recipeezy
 
+## Project Video
+
+https://youtu.be/z3xI3RSsC04
+
+## Project Presentation
+
+https://cdn-uploads.piazza.com/paste/kjxdp5zv62l45q/25543021b4133657d5f225efb7f08fcd18f8398568c646178bd05bd5db925ea9/Recipeezy_Presentation.pdf
+
 ## Team Members
 
 * Luis Mendoza
